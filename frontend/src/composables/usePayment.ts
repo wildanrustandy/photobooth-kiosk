@@ -109,6 +109,12 @@ export function usePayment() {
     }
   }
 
+  function simulatePaymentSuccess() {
+    store.setPaymentStatus('success')
+    stopPolling()
+    stopCountdown()
+  }
+
   const formattedCountdown = computed(() => {
     const minutes = Math.floor(countdown.value / 60)
     const seconds = countdown.value % 60
@@ -130,6 +136,7 @@ export function usePayment() {
     createPayment,
     checkPaymentStatus,
     startPolling,
-    stopPolling
+    stopPolling,
+    simulatePaymentSuccess
   }
 }

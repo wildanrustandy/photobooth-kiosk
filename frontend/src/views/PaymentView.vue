@@ -12,8 +12,11 @@ const {
   createPayment, 
   countdown,
   formattedCountdown,
-  stopPolling 
+  stopPolling,
+  simulatePaymentSuccess
 } = usePayment()
+
+const isDemo = import.meta.env.DEV || !import.meta.env.VITE_API_BASE
 
 onMounted(async () => {
   await createPayment()
@@ -33,6 +36,10 @@ function handleNext() {
     store.nextStep()
     router.push('/photo-session')
   }
+}
+
+function handleSimulatePayment() {
+  simulatePaymentSuccess()
 }
 </script>
 
@@ -172,7 +179,17 @@ function handleNext() {
       </div>
     </main>
     
-    <footer class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-10 pb-12 pt-6 bg-white/60 backdrop-blur-xl shadow-[0_-20px_40px_rgba(36,48,54,0.06)] rounded-t-[3rem]">
+<footer class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-10 pb-12 pt-6 bg-white/60 backdrop-blur-xl shadow-[0_-20px_40px_rgba(36,48,54,0.06)] rounded-t-[3rem]">
+      <!-- Demo Mode Button -->
+      <button 
+        v-if="isDemo && store.paymentStatus === 'pending'"
+        class="flex flex-col items-center justify-center bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full px-8 py-4 shadow-lg hover:brightness-110 transition-all active:scale-90 duration-200 touch-none"
+        @click="handleSimulatePayment"
+      >
+        <span class="material-symbols-outlined text-xl mb-1">check_circle</span>
+        <span class="font-body font-bold uppercase tracking-widest text-xs">Demo: Bayar</span>
+      </button>
+      
       <button 
         class="flex flex-col items-center justify-center text-on-surface bg-surface-container-lowest rounded-full px-10 py-4 shadow-sm hover:brightness-110 transition-all active:scale-90 duration-200 touch-none"
         @click="handleBack"
