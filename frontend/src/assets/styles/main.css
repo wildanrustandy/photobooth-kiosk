@@ -1,0 +1,110 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+@theme {
+  --color-on-primary-container: #4c0022;
+  --color-surface-container-highest: #cde0ea;
+  --color-tertiary-container: #fae2ea;
+  --color-surface-container-low: #e4f3fc;
+  --color-background: #edf8ff;
+  --color-surface-tint: #a7295a;
+  --color-on-tertiary-container: #615157;
+  --color-primary-container: #ff709f;
+  --color-on-surface: #243036;
+  --color-on-error: #ffefef;
+  --color-surface-container: #dbebf4;
+  --color-on-tertiary-fixed: #4e3f45;
+  --color-inverse-primary: #fd6c9c;
+  --color-primary-fixed: #ff709f;
+  --color-outline: #6c7980;
+  --color-tertiary-fixed: #fae2ea;
+  --color-error-dim: #a70138;
+  --color-primary-fixed-dim: #f06292;
+  --color-inverse-surface: #041015;
+  --color-on-secondary-fixed-variant: #714355;
+  --color-tertiary-fixed-dim: #ebd4dc;
+  --color-secondary-fixed: #fec1d6;
+  --color-on-background: #243036;
+  --color-primary: #a7295a;
+  --color-error: #b41340;
+  --color-surface-container-high: #d4e5ef;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-surface-variant: #515d64;
+  --color-error-container: #f74b6d;
+  --color-on-tertiary: #ffeff3;
+  --color-surface-variant: #cde0ea;
+  --color-on-primary-fixed-variant: #5d002b;
+  --color-on-secondary-container: #663a4b;
+  --color-secondary-container: #fec1d6;
+  --color-outline-variant: #a2afb6;
+  --color-on-primary: #ffeff1;
+  --color-on-primary-fixed: #000000;
+  --color-secondary-fixed-dim: #efb3c8;
+  --color-on-secondary: #ffeff2;
+  --color-inverse-on-surface: #929fa6;
+  --color-primary-dim: #971b4e;
+  --color-surface-dim: #c3d7e3;
+  --color-on-error-container: #510017;
+  --color-on-secondary-fixed: #502738;
+  --color-surface: #edf8ff;
+  --color-secondary-dim: #6f4253;
+  --color-on-tertiary-fixed-variant: #6c5a61;
+  --color-tertiary-dim: #5c4b52;
+  --color-secondary: #7d4d5f;
+  --color-tertiary: #68575e;
+  --color-surface-bright: #edf8ff;
+  
+  --font-family-headline: "Plus Jakarta Sans", sans-serif;
+  --font-family-body: "Be Vietnam Pro", sans-serif;
+  --font-family-label: "Plus Jakarta Sans", sans-serif;
+  
+  --radius-DEFAULT: 1rem;
+  --radius-lg: 2rem;
+  --radius-xl: 3rem;
+  --radius-full: 9999px;
+  
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    font-family: var(--font-family-body);
+    color: var(--color-on-surface);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-headline);
+  }
+}
+
+@utility no-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  & {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@utility bg-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+}
+
+@utility bg-confetti {
+  background-image: 
+    radial-gradient(circle at 10% 20%, #ff709f 1px, transparent 1px),
+    radial-gradient(circle at 90% 40%, #a7295a 1px, transparent 1px),
+    radial-gradient(circle at 50% 10%, #fec1d6 1px, transparent 1px),
+    radial-gradient(circle at 30% 80%, #ff709f 1px, transparent 1px);
+  background-size: 100px 100px;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}

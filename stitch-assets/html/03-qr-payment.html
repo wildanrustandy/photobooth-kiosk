@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Photobooth - Pembayaran QRIS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-container": "#4c0022",
+              "surface-container-highest": "#cde0ea",
+              "tertiary-container": "#fae2ea",
+              "surface-container-low": "#e4f3fc",
+              "background": "#edf8ff",
+              "surface-tint": "#a7295a",
+              "on-tertiary-container": "#615157",
+              "primary-container": "#ff709f",
+              "on-surface": "#243036",
+              "on-error": "#ffefef",
+              "surface-container": "#dbebf4",
+              "on-tertiary-fixed": "#4e3f45",
+              "inverse-primary": "#fd6c9c",
+              "primary-fixed": "#ff709f",
+              "outline": "#6c7980",
+              "tertiary-fixed": "#fae2ea",
+              "error-dim": "#a70138",
+              "primary-fixed-dim": "#f06292",
+              "inverse-surface": "#041015",
+              "on-secondary-fixed-variant": "#714355",
+              "tertiary-fixed-dim": "#ebd4dc",
+              "secondary-fixed": "#fec1d6",
+              "on-background": "#243036",
+              "primary": "#a7295a",
+              "error": "#b41340",
+              "surface-container-high": "#d4e5ef",
+              "surface-container-lowest": "#ffffff",
+              "on-surface-variant": "#515d64",
+              "error-container": "#f74b6d",
+              "on-tertiary": "#ffeff3",
+              "surface-variant": "#cde0ea",
+              "on-primary-fixed-variant": "#5d002b",
+              "on-secondary-container": "#663a4b",
+              "secondary-container": "#fec1d6",
+              "outline-variant": "#a2afb6",
+              "on-primary": "#ffeff1",
+              "on-primary-fixed": "#000000",
+              "secondary-fixed-dim": "#efb3c8",
+              "on-secondary": "#ffeff2",
+              "inverse-on-surface": "#929fa6",
+              "primary-dim": "#971b4e",
+              "surface-dim": "#c3d7e3",
+              "on-error-container": "#510017",
+              "on-secondary-fixed": "#502738",
+              "surface": "#edf8ff",
+              "secondary-dim": "#6f4253",
+              "on-tertiary-fixed-variant": "#6c5a61",
+              "tertiary-dim": "#5c4b52",
+              "secondary": "#7d4d5f",
+              "tertiary": "#68575e",
+              "surface-bright": "#edf8ff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        h1, h2, h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 py-6 bg-[#edf8ff] dark:bg-[#243036] border-none">
+<div class="flex items-center gap-4">
+<span class="text-3xl font-black text-[#a7295a] dark:text-[#f06292] tracking-tighter">Photobooth</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-[#a7295a] font-extrabold border-b-4 border-[#a7295a] pb-1 hover:scale-105 transition-transform duration-300" href="#">Step 2/5</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="text-[#243036]/60 dark:text-white/60 font-medium hover:scale-105 transition-transform duration-300">
+<span class="material-symbols-outlined text-2xl">help</span>
+</button>
+<button class="text-[#243036]/60 dark:text-white/60 font-medium hover:scale-105 transition-transform duration-300">
+<span class="material-symbols-outlined text-2xl">settings</span>
+</button>
+</div>
+<div class="bg-[#dbebf4] dark:bg-[#2c3b42] h-px w-full absolute bottom-0 left-0"></div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-32 pb-40 px-6 max-w-4xl mx-auto flex flex-col items-center">
+<!-- Progress Indicator -->
+<div class="flex gap-2 mb-10">
+<div class="h-2 w-12 rounded-full bg-primary/20"></div>
+<div class="h-2 w-12 rounded-full bg-primary shadow-sm shadow-primary/30"></div>
+<div class="h-2 w-12 rounded-full bg-surface-container-highest"></div>
+<div class="h-2 w-12 rounded-full bg-surface-container-highest"></div>
+<div class="h-2 w-12 rounded-full bg-surface-container-highest"></div>
+</div>
+<section class="w-full text-center mb-10">
+<h1 class="text-4xl md:text-5xl font-extrabold text-on-surface tracking-tight mb-4">Pembayaran QRIS</h1>
+<p class="text-on-surface-variant font-medium text-lg">Scan QR dengan aplikasi pembayaran Anda</p>
+</section>
+<!-- QR Display Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 w-full">
+<!-- Left Panel: Summary -->
+<div class="md:col-span-4 flex flex-col gap-6 order-2 md:order-1">
+<div class="bg-surface-container-low p-8 rounded-xl shadow-[0_20px_40px_rgba(36,48,54,0.06)] flex flex-col justify-between h-full">
+<div>
+<h3 class="font-headline font-bold text-xl text-primary mb-6">Ringkasan</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant font-medium">Paket Foto</span>
+<span class="text-on-surface font-bold">Standard</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant font-medium">Jumlah Cetak</span>
+<span class="text-on-surface font-bold">2 Lembar</span>
+</div>
+<div class="w-full h-px bg-outline-variant/20 my-2"></div>
+<div class="flex justify-between items-end">
+<span class="text-on-surface-variant font-medium">Total Harga</span>
+<span class="text-2xl font-black text-on-surface">Rp 50.000</span>
+</div>
+</div>
+</div>
+<!-- Timer Widget -->
+<div class="mt-8 pt-8 border-t border-outline-variant/10">
+<div class="flex flex-col items-center bg-white rounded-lg p-6">
+<span class="text-on-surface-variant font-label text-xs uppercase tracking-widest font-bold mb-1">Sisa Waktu</span>
+<div class="text-4xl font-black text-primary tracking-tighter">05:00</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Center Panel: QR Scanner -->
+<div class="md:col-span-8 order-1 md:order-2">
+<div class="bg-white p-2 rounded-xl shadow-lg relative overflow-hidden group">
+<!-- Glassmorphism Overlay Texture -->
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none"></div>
+<div class="relative bg-white border-[1.5rem] border-white rounded-[2rem] flex flex-col items-center">
+<div class="w-full aspect-square max-w-[400px] flex items-center justify-center relative p-8 bg-surface-container-low/30 rounded-lg">
+<!-- Visual QR Code Mock -->
+<div class="relative w-full h-full bg-white rounded-lg p-4 shadow-inner">
+<img alt="QRIS Code" class="w-full h-full object-contain mix-blend-multiply" data-alt="A detailed digital QR code for payment displayed on a white card with a clean graphic aesthetic and rounded corners" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKhSVEoz0HNS8jSrP0_utTrFmkagUrjq4H-HKbnTDQWOyBkcuRNLFwRBnpQBdkh0OhhDNEBBAW30K6CBAEG980CnCdHmOxFZGyTff_rlJU168l-7nq7NfOgFLwUrlMZlo4cyWwkn18uGUCZwcc62PzGX4FF6J1YxcMfMoskzROLAxjc-2aUR7tpuHe9-huGShAg02f5v6PiUWYu8Frj6z75EvCT4GoZPF8Gpuvx-yXarADrCbcDqihRhpY9x04WgWC0ciVkbcdzkU"/>
+<!-- Scan Animation Element -->
+<div class="absolute top-0 left-0 w-full h-1 bg-primary/40 shadow-[0_0_15px_rgba(167,41,90,0.5)] rounded-full"></div>
+</div>
+<!-- Decorative Corners -->
+<div class="absolute top-4 left-4 w-12 h-12 border-t-4 border-l-4 border-primary rounded-tl-lg"></div>
+<div class="absolute top-4 right-4 w-12 h-12 border-t-4 border-r-4 border-primary rounded-tr-lg"></div>
+<div class="absolute bottom-4 left-4 w-12 h-12 border-b-4 border-l-4 border-primary rounded-bl-lg"></div>
+<div class="absolute bottom-4 right-4 w-12 h-12 border-b-4 border-r-4 border-primary rounded-br-lg"></div>
+</div>
+<!-- Logo & QRIS Brand -->
+<div class="mt-8 mb-4 flex items-center gap-4">
+<img alt="QRIS Logo" class="h-8 w-auto" data-alt="Official QRIS payment system logo with red and grey geometric shapes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9_rG5wS0N-ZFzA4DX1XjrYB5v5Hhh1dFZ0vidZLH39cmXJSi3WOF88NMXH_u52Z-cdfK-KiHYAPH0iePPXZyuQ6-3yVsKgx3C6TlrLRsD_HNDD4jRVmGeS1lncr_UKpUCzBwGBeNY3XA38qY0Ruam7WgcvPeQ8k9zMBSAuRVNNcR55SofaRNS_MdFjNC6aPnXLLDjBcDQ3pbBqkLLgreOnB0uUdHAgfgxOEJBxRxzQPew2pBOB6axJ4oeFX4limXR8B9_Jk_vTmE"/>
+<div class="h-6 w-px bg-outline-variant"></div>
+<span class="font-headline font-extrabold text-on-surface-variant tracking-widest text-sm uppercase">GPN</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Instructional Sub-details -->
+<div class="mt-12 w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex items-start gap-4 p-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary font-bold">qr_code_scanner</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Buka Aplikasi</h4>
+<p class="text-sm text-on-surface-variant">Gunakan Dana, GoPay, OVO, ShopeePay, atau BCA Mobile.</p>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary font-bold">ads_click</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Scan &amp; Bayar</h4>
+<p class="text-sm text-on-surface-variant">Pindai kode QR dan masukkan PIN keamanan Anda.</p>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary font-bold">task_alt</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Konfirmasi</h4>
+<p class="text-sm text-on-surface-variant">Layar akan otomatis beralih setelah pembayaran berhasil.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-10 pb-12 pt-6 bg-white/60 dark:bg-[#243036]/60 backdrop-blur-xl shadow-[0_-20px_40px_rgba(36,48,54,0.06)] rounded-t-[3rem]">
+<!-- Inactive Tab (Back) -->
+<button class="flex flex-col items-center justify-center text-[#243036] dark:text-white bg-[#ffffff] dark:bg-[#2c3b42] rounded-full px-10 py-4 shadow-sm hover:brightness-110 transition-all active:scale-90 duration-200 touch-none">
+<span class="material-symbols-outlined text-xl mb-1" data-icon="arrow_back_ios">arrow_back_ios</span>
+<span class="font-['Be_Vietnam_Pro'] font-bold uppercase tracking-widest text-xs">Batal</span>
+</button>
+<!-- Placeholder for Next (Automatically triggered by payment usually) -->
+<div class="hidden md:flex flex-col items-center text-on-surface-variant/40 animate-pulse">
+<span class="font-headline font-bold text-xs uppercase tracking-[0.2em]">Menunggu Pembayaran...</span>
+</div>
+<!-- Semantic Active State - Though it's a "Wait" screen, UI often highlights primary forward action or branding -->
+<button class="flex flex-col items-center justify-center bg-gradient-to-r from-[#a7295a] to-[#ff709f] text-white rounded-full px-12 py-4 scale-110 shadow-lg hover:brightness-110 transition-all active:scale-90 duration-200 touch-none">
+<span class="material-symbols-outlined text-xl mb-1" data-icon="arrow_forward_ios">arrow_forward_ios</span>
+<span class="font-['Be_Vietnam_Pro'] font-bold uppercase tracking-widest text-xs">Next</span>
+</button>
+</nav>
+</body></html>

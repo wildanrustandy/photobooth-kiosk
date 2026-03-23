@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be_Vietnam_Pro:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-container": "#4c0022",
+              "surface-container-highest": "#cde0ea",
+              "tertiary-container": "#fae2ea",
+              "surface-container-low": "#e4f3fc",
+              "background": "#edf8ff",
+              "surface-tint": "#a7295a",
+              "on-tertiary-container": "#615157",
+              "primary-container": "#ff709f",
+              "on-surface": "#243036",
+              "on-error": "#ffefef",
+              "surface-container": "#dbebf4",
+              "on-tertiary-fixed": "#4e3f45",
+              "inverse-primary": "#fd6c9c",
+              "primary-fixed": "#ff709f",
+              "outline": "#6c7980",
+              "tertiary-fixed": "#fae2ea",
+              "error-dim": "#a70138",
+              "primary-fixed-dim": "#f06292",
+              "inverse-surface": "#041015",
+              "on-secondary-fixed-variant": "#714355",
+              "tertiary-fixed-dim": "#ebd4dc",
+              "secondary-fixed": "#fec1d6",
+              "on-background": "#243036",
+              "primary": "#a7295a",
+              "error": "#b41340",
+              "surface-container-high": "#d4e5ef",
+              "surface-container-lowest": "#ffffff",
+              "on-surface-variant": "#515d64",
+              "error-container": "#f74b6d",
+              "on-tertiary": "#ffeff3",
+              "surface-variant": "#cde0ea",
+              "on-primary-fixed-variant": "#5d002b",
+              "on-secondary-container": "#663a4b",
+              "secondary-container": "#fec1d6",
+              "outline-variant": "#a2afb6",
+              "on-primary": "#ffeff1",
+              "on-primary-fixed": "#000000",
+              "secondary-fixed-dim": "#efb3c8",
+              "on-secondary": "#ffeff2",
+              "inverse-on-surface": "#929fa6",
+              "primary-dim": "#971b4e",
+              "surface-dim": "#c3d7e3",
+              "on-error-container": "#510017",
+              "on-secondary-fixed": "#502738",
+              "surface": "#edf8ff",
+              "secondary-dim": "#6f4253",
+              "on-tertiary-fixed-variant": "#6c5a61",
+              "tertiary-dim": "#5c4b52",
+              "secondary": "#7d4d5f",
+              "tertiary": "#68575e",
+              "surface-bright": "#edf8ff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-confetti {
+            background-image: 
+                radial-gradient(circle at 10% 20%, #ff709f 1px, transparent 1px),
+                radial-gradient(circle at 90% 40%, #a7295a 1px, transparent 1px),
+                radial-gradient(circle at 50% 10%, #fec1d6 1px, transparent 1px),
+                radial-gradient(circle at 30% 80%, #ff709f 1px, transparent 1px);
+            background-size: 100px 100px;
+        }
+        .photo-strip-shadow {
+            box-shadow: 0 20px 40px rgba(36, 48, 54, 0.1);
+        }
+        body {
+            height: 100vh;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface flex flex-col selection:bg-primary/20 bg-confetti">
+<!-- Compact TopAppBar -->
+<header class="flex-none flex justify-between items-center px-8 py-4 bg-white/50 backdrop-blur-sm border-b border-surface-container">
+<div class="flex items-center gap-4">
+<span class="text-2xl font-black text-[#a7295a] tracking-tighter">Photobooth</span>
+</div>
+<nav>
+<span class="text-[#a7295a] font-extrabold font-headline text-lg tracking-tight">Step 5/5</span>
+</nav>
+<div class="flex items-center gap-3">
+<button class="p-2 text-[#a7295a] hover:bg-white/50 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<button class="p-2 text-[#a7295a] hover:bg-white/50 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<main class="flex-grow flex flex-col px-6 overflow-hidden">
+<!-- Minimal Hero -->
+<div class="flex-none py-4 text-center">
+<h1 class="font-headline font-extrabold text-4xl text-on-surface tracking-tighter">
+                You look <span class="text-primary italic">stunning!</span>
+</h1>
+</div>
+<!-- Main Workspace: Balanced Layout -->
+<div class="flex-grow grid grid-cols-12 gap-6 items-center overflow-hidden pb-6">
+<!-- Left Column: Raw Shots -->
+<div class="col-span-3 h-full flex flex-col justify-center">
+<div class="bg-surface-container-high/60 backdrop-blur-md p-6 rounded-2xl">
+<h3 class="font-headline font-bold text-on-surface mb-4 text-center">The Raw Cuts</h3>
+<div class="grid grid-cols-2 gap-3">
+<div class="aspect-square rounded-lg overflow-hidden border-2 border-white rotate-[-2deg] shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Raw shot 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmp-pyec1JvUcv4KE1cN1_EBB66NlMlYKpwjRBmVQqviEUysUud0f4V6DXuYWRdFmNlKxmtESv5I_7-Zlgm0fZhBXCui5KzxcPKe1L8n5zoGTiTs4g7wvFhyS5ZQuCYI-RHuwa0JM-eDaD5hyKFL-d-NXct2QgQcadUeu7hfFIY8mZMluUCQAUbLaoZxmYKoGh15mddndXsS_3fOFD9wasLo3YL_dQX-X1KA-44Zxh_6EkxNH0zG_Ped3xD-v1OoWNDozh4SIKweY"/>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden border-2 border-white rotate-[3deg] shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Raw shot 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaujhJr_ZMOl6aCvAVo5TRdRjvzUAD_jpql9thVsHJgVaz--07kR-RT_JNtdGCjyC9dmw09hF5R-8Ht1ag-GWbO8Dt5SNz9T_CL7lkO0XPJyxShdIKnvl-V_c7boY2TB8io3F_2EKA-JTba0ULK7evFzttV6x8_I9mC0GDai6BouvAq954k4rDUSaPFdnogCfnQjsmIx9q24RFCGW8PpC1R22V2NArbrV_hDAlb-vrv6cioI0Rph9kFyG_qsDnl6PpkYxcKM33UZA"/>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden border-2 border-white rotate-[1deg] shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Raw shot 3" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFJtAuaDP2ZrRlIqmykgsSfC9i44XmEogX585Uf_j8igPZMak9M8lqECUPnoimglaJM43HdJT_LJORnxIQF_-HFf5cOY_wVuV1fqkXC1ZjS7a-LjbYi2lFvcQGFI5679QBhexciTzyv-obowo3cvfTFVmS2lKx9vO0BLJ7yhepBzxYZXjTj2x5Vi_NWSAdrt0sm3Ujht5t2KZ705ODytAEwfyBpmT-VYbyL-IF87hOGs1ROV9DiFssWgYMZdBptyDTnOzh66jN6SE"/>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden border-2 border-white rotate-[-3deg] shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Raw shot 4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOC4KbCO6I215IUEm1TfRDh6tLQSur9M0aqToJ_qx2IoDoMyTVUmoL4-wiKez60G-r3IO4ZkDHVM-did271Fg6O6hoGYvhflr3umJjGBtiikJnZsCpMKj1d6Hmx78IP_UVgjPj8TaNT1XLCW9hlhv9zPLSX9iQj8zU0IRnyEwCgZyO4he5paL4jcpJjM8HSoJA0IE9YtQxLcAtcf3BUgZ_qfxFLZrua2vBzpJBIEretN8HTZZYZ-FSuYaPLYEoC5jnuQnrzh9D5qs"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Center Column: Scaled Photo Strip -->
+<div class="col-span-6 h-full flex flex-col justify-center items-center overflow-hidden">
+<div class="bg-surface-container-lowest p-4 rounded-xl photo-strip-shadow h-full max-h-[75vh] w-auto aspect-[1/2.5] flex flex-col gap-2 transform hover:scale-[1.02] transition-transform">
+<div class="text-center">
+<span class="text-primary font-headline font-black tracking-widest uppercase text-[10px] opacity-40">The Social Glow • 2024</span>
+</div>
+<div class="flex-grow grid grid-rows-4 gap-2 overflow-hidden">
+<img class="w-full h-full object-cover rounded" data-alt="Shot 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdubekutHFV8oHCLPhJ8utFRn6Zh4vWxa1inyPaV8SIcYqvBcV_24dRb1M58vcsGwxhmYyijIfjZhmc2RRhb8GxH5_J8-MwKcFcizCFW9RMqBurzOgqtha3NgT1aEfmV69RTqzuTSAQoA_Q6jCz9o9j9T0a2-mLf0khLwFxDnSWBw6VEFil3Ce3Fzz-DJaCNWBo2c6ShykjRQh3ajQpui9MZxqq8IRB8Ab4wIRKf63wh03ERyfxvNW1bQnd5TP1VFaRwKml8oiws0"/>
+<img class="w-full h-full object-cover rounded" data-alt="Shot 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6Qm2EA6dhwAzT5JHxZrxAPhN-Toy9lsOl9QIUYnRlu13pqhiVX6UMJ_QUMEj_jXVtxKNNNoAIVQGeeeCDw36B-cX2S2PcZTaB19Yecj18q4On6dX-bzx-xTNMvVVMKN_y9b9YRX6Q5YT3clB0LXKV3X7YQvGSS7XbLLXnyDoozqY_GzoKCghQCc6Dy_D349y8CaPXa4ZdpEjTpI-yqywTGaGP0pcAM7zLtq_EPHOBG0zvICX4G8uOXBVQ_G0O89-UBX2-aGumN04"/>
+<img class="w-full h-full object-cover rounded" data-alt="Shot 3" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWFyxU2NnnyYaFxroB3C6-qolrwGQzbWf9-t3N4mjkk5TkQvoHxMlyWFN_Eln4rXUVQoTu1bvMNu73zzDAdkX71PJmp8N2Md2rWGuA7Je3J4OG1g8J_9RoGDjETXt6Ook1pSSfCsVTaSyD6mTvjlJphq1F3iGtxNp2ESyNzVrPsG-lF-KqTXNIbSi6o1ZGE48_rVXdwnS7D10_QeicLJF3QJ-TOKuCy2w8KDmgD0xb-mcXs7dIK1CEdtdyGIGC6hs_psPnbkmxKMM"/>
+<img class="w-full h-full object-cover rounded" data-alt="Shot 4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD4tEu9J0EGaGiz-yTcotuKa9bdQ72217Wy8VnS4FV4E9x0yByxYrncvH0GEtSPSJNOEoG_FlRFo3t1Gjg_FJcV_eouEByltbbVNmBSqBsB2eWcUGCyddaM_Vi3w6MKhyMmjQR6W0FqROrDgmoPg5_dgNnqdjnTwkenKYdr0Vu7yfg8reiF6MTRRGuxAIuIT2L9dJAAdsSkyK7RqMqCrgBxC85QOxQRKcRkEiXfzHchd-uO3gs-4aqqGL7pGzCmwxBd5rmg8Itp9w"/>
+</div>
+<div class="text-center pt-2 border-t border-dashed border-surface-container">
+<span class="font-body text-[10px] font-bold text-on-surface-variant tracking-widest">MOMENTS CAPTURED</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Download & Actions -->
+<div class="col-span-3 h-full flex flex-col justify-center gap-4">
+<div class="bg-white/60 backdrop-blur-xl border border-white/40 p-5 rounded-2xl shadow-lg text-center">
+<h3 class="font-headline font-bold text-on-surface text-lg mb-1">Get Digital Copy</h3>
+<p class="text-on-surface-variant text-xs mb-4">Scan for instant download</p>
+<div class="bg-white p-3 rounded-lg inline-block shadow-sm border border-surface-container-low mb-3">
+<!-- Simplified QR -->
+<div class="w-32 h-32 bg-on-surface flex items-center justify-center p-2 rounded">
+<div class="grid grid-cols-4 grid-rows-4 gap-1 w-full h-full">
+<div class="bg-white"></div><div class="bg-on-surface"></div><div class="bg-white"></div><div class="bg-white"></div>
+<div class="bg-white"></div><div class="bg-white"></div><div class="bg-on-surface"></div><div class="bg-white"></div>
+<div class="bg-on-surface"></div><div class="bg-on-surface"></div><div class="bg-white"></div><div class="bg-on-surface"></div>
+<div class="bg-white"></div><div class="bg-on-surface"></div><div class="bg-on-surface"></div><div class="bg-white"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<button class="w-full bg-primary py-4 rounded-full shadow-lg hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-3 text-white">
+<span class="material-symbols-outlined" data-icon="print">print</span>
+<span class="font-headline font-extrabold uppercase tracking-widest">Print Now</span>
+</button>
+<button class="w-full bg-surface-container-low py-4 rounded-full border border-surface-container hover:bg-surface-container transition-all active:scale-95 flex items-center justify-center gap-3">
+<span class="material-symbols-outlined text-on-surface" data-icon="mail">mail</span>
+<span class="font-label font-bold text-on-surface text-sm uppercase tracking-wider">Email Copy</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Kiosk Bottom Navigation -->
+<footer class="flex-none bg-white/60 backdrop-blur-xl px-12 py-6 flex justify-between items-center border-t border-surface-container">
+<button class="flex items-center gap-3 text-[#243036] bg-white border border-surface-container rounded-full px-8 py-3 shadow-sm hover:bg-surface-container-low transition-all active:scale-95">
+<span class="material-symbols-outlined text-[#a7295a]" data-icon="arrow_back_ios">arrow_back_ios</span>
+<span class="font-headline font-bold uppercase tracking-widest text-sm">Back</span>
+</button>
+<div class="flex flex-col items-center">
+<p class="text-on-surface-variant text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Ready for the next person?</p>
+<button class="flex items-center gap-3 bg-gradient-to-r from-[#a7295a] to-[#ff709f] text-white rounded-full px-16 py-4 shadow-xl hover:brightness-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-headline font-extrabold uppercase tracking-[0.15em] text-lg">SELESAI</span>
+</button>
+</div>
+<div class="w-[120px] invisible"></div> <!-- Spacer for balance -->
+</footer>
+</body></html>

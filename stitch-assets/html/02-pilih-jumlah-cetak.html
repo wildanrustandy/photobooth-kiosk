@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-container": "#4c0022",
+              "surface-container-highest": "#cde0ea",
+              "tertiary-container": "#fae2ea",
+              "surface-container-low": "#e4f3fc",
+              "background": "#edf8ff",
+              "surface-tint": "#a7295a",
+              "on-tertiary-container": "#615157",
+              "primary-container": "#ff709f",
+              "on-surface": "#243036",
+              "on-error": "#ffefef",
+              "surface-container": "#dbebf4",
+              "on-tertiary-fixed": "#4e3f45",
+              "inverse-primary": "#fd6c9c",
+              "primary-fixed": "#ff709f",
+              "outline": "#6c7980",
+              "tertiary-fixed": "#fae2ea",
+              "error-dim": "#a70138",
+              "primary-fixed-dim": "#f06292",
+              "inverse-surface": "#041015",
+              "on-secondary-fixed-variant": "#714355",
+              "tertiary-fixed-dim": "#ebd4dc",
+              "secondary-fixed": "#fec1d6",
+              "on-background": "#243036",
+              "primary": "#a7295a",
+              "error": "#b41340",
+              "surface-container-high": "#d4e5ef",
+              "surface-container-lowest": "#ffffff",
+              "on-surface-variant": "#515d64",
+              "error-container": "#f74b6d",
+              "on-tertiary": "#ffeff3",
+              "surface-variant": "#cde0ea",
+              "on-primary-fixed-variant": "#5d002b",
+              "on-secondary-container": "#663a4b",
+              "secondary-container": "#fec1d6",
+              "outline-variant": "#a2afb6",
+              "on-primary": "#ffeff1",
+              "on-primary-fixed": "#000000",
+              "secondary-fixed-dim": "#efb3c8",
+              "on-secondary": "#ffeff2",
+              "inverse-on-surface": "#929fa6",
+              "primary-dim": "#971b4e",
+              "surface-dim": "#c3d7e3",
+              "on-error-container": "#510017",
+              "on-secondary-fixed": "#502738",
+              "surface": "#edf8ff",
+              "secondary-dim": "#6f4253",
+              "on-tertiary-fixed-variant": "#6c5a61",
+              "tertiary-dim": "#5c4b52",
+              "secondary": "#7d4d5f",
+              "tertiary": "#68575e",
+              "surface-bright": "#edf8ff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #edf8ff;
+            background-image: radial-gradient(at 0% 0%, #fae2ea 0%, transparent 50%), 
+                              radial-gradient(at 100% 100%, #fec1d6 0%, transparent 50%);
+            min-height: 100vh;
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 py-6 bg-[#edf8ff] dark:bg-[#243036] border-none">
+<div class="text-3xl font-black text-[#a7295a] dark:text-[#f06292] tracking-tighter">Photobooth</div>
+<nav class="hidden md:flex items-center gap-8">
+<span class="text-[#a7295a] font-extrabold border-b-4 border-[#a7295a] pb-1 hover:scale-105 transition-transform duration-300 cursor-pointer">Step 1/5</span>
+</nav>
+<div class="flex items-center gap-4">
+<button class="text-[#a7295a] dark:text-[#f06292] hover:scale-105 transition-transform duration-300 active:scale-95 transition-all duration-150">
+<span class="material-symbols-outlined text-2xl" data-icon="help">help</span>
+</button>
+<button class="text-[#a7295a] dark:text-[#f06292] hover:scale-105 transition-transform duration-300 active:scale-95 transition-all duration-150">
+<span class="material-symbols-outlined text-2xl" data-icon="settings">settings</span>
+</button>
+</div>
+<div class="bg-[#dbebf4] dark:bg-[#2c3b42] h-px w-full absolute bottom-0"></div>
+</header>
+<main class="pt-32 pb-48 px-6 max-w-4xl mx-auto flex flex-col items-center">
+<!-- Progress Dots -->
+<div class="flex gap-3 mb-12">
+<div class="w-12 h-3 rounded-full bg-primary shadow-sm"></div>
+<div class="w-3 h-3 rounded-full bg-surface-container-highest"></div>
+<div class="w-3 h-3 rounded-full bg-surface-container-highest"></div>
+<div class="w-3 h-3 rounded-full bg-surface-container-highest"></div>
+<div class="w-3 h-3 rounded-full bg-surface-container-highest"></div>
+</div>
+<h1 class="font-headline text-5xl md:text-6xl font-black text-on-surface text-center mb-16 tracking-tight leading-tight">
+            Mau cetak berapa lembar?
+        </h1>
+<div class="w-full flex flex-col md:flex-row gap-8 items-stretch">
+<!-- Left Side: Preview Card -->
+<div class="flex-1 bg-surface-container-lowest rounded-xl p-6 shadow-[0_20px_40px_rgba(36,48,54,0.06)] flex flex-col items-center justify-center relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-50"></div>
+<div class="relative w-full aspect-[3/4] rounded-lg overflow-hidden border-8 border-white shadow-lg rotate-[-2deg] group-hover:rotate-0 transition-transform duration-500">
+<img alt="Sample photobooth strip" class="w-full h-full object-cover" data-alt="Modern photobooth print strip showing multiple poses of a smiling woman with cinematic soft lighting and warm tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdq6jrNXK7j5BULFeaoh9oS-jXiQZEf0x49j6s8nqA7N5h1fqwHqPBR3b-SpRhhUzZ1phFHpWJ9WuvT8hATQh5yrw7OpqU0vQRk5mblnXOeCqp-_3RZ7r79ZThjhrPDMfXyeS3SbxXRKdk-7X3O7o3-upsiK1Jobrj9nKwjgA6fpksDcTfVPNdOeNA61Owdox7b3hPJNXfrJQY284JmIAOSLi00pBiUjVnqVMn9idvZe8XMXe8tHzWpi8ufuhCnopC6PjvPzYTHyY"/>
+</div>
+<div class="mt-8 text-center relative z-10">
+<p class="font-label text-sm font-bold text-primary tracking-widest uppercase mb-1">Standard Glossy</p>
+<p class="font-body text-on-surface-variant">4x6 inch • 300dpi</p>
+</div>
+</div>
+<!-- Right Side: Interaction Card -->
+<div class="flex-1 bg-surface-container-low rounded-xl p-10 flex flex-col justify-between shadow-[0_20px_40px_rgba(36,48,54,0.04)]">
+<div>
+<div class="flex items-center justify-between mb-8">
+<span class="font-label text-lg font-bold text-on-surface">Quantity</span>
+<div class="bg-secondary-container text-on-secondary-container px-4 py-1 rounded-full font-bold text-sm">
+                            Rp 35.000 / lembar
+                        </div>
+</div>
+<!-- Counter Component -->
+<div class="flex items-center justify-between bg-surface-container-lowest rounded-full p-2 shadow-sm mb-12 border border-outline-variant/10">
+<button class="w-16 h-16 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-container-high text-primary transition-all active:scale-90">
+<span class="material-symbols-outlined font-bold text-3xl" data-icon="remove">remove</span>
+</button>
+<span class="font-headline text-5xl font-black text-on-surface">02</span>
+<button class="w-16 h-16 flex items-center justify-center rounded-full bg-primary text-on-primary hover:brightness-110 transition-all active:scale-90 shadow-md">
+<span class="material-symbols-outlined font-bold text-3xl" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-end border-b border-outline-variant/20 pb-4">
+<span class="text-on-surface-variant font-medium">Subtotal</span>
+<span class="text-on-surface font-bold text-xl tracking-tight">Rp 70.000</span>
+</div>
+<div class="flex justify-between items-baseline pt-2">
+<span class="text-on-surface font-bold text-lg">Total Payment</span>
+<span class="text-primary font-black text-4xl tracking-tighter">Rp 70.000</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<footer class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-10 pb-12 pt-6 bg-white/60 dark:bg-[#243036]/60 backdrop-blur-xl rounded-t-[3rem] shadow-[0_-20px_40px_rgba(36,48,54,0.06)]">
+<!-- Back Button -->
+<button class="flex flex-col items-center justify-center text-[#243036] dark:text-white bg-[#ffffff] dark:bg-[#2c3b42] rounded-full px-10 py-4 shadow-sm hover:brightness-110 transition-all active:scale-90 duration-200 touch-none">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm font-bold" data-icon="arrow_back_ios">arrow_back_ios</span>
+<span class="font-['Be_Vietnam_Pro'] font-bold uppercase tracking-widest text-xs">Back</span>
+</div>
+</button>
+<!-- Next Button (Active State) -->
+<button class="flex flex-col items-center justify-center bg-gradient-to-r from-[#a7295a] to-[#ff709f] text-white rounded-full px-12 py-4 scale-110 shadow-lg hover:brightness-110 transition-all active:scale-90 duration-200 touch-none">
+<div class="flex items-center gap-2">
+<span class="font-['Be_Vietnam_Pro'] font-bold uppercase tracking-widest text-xs">LANJUTKAN</span>
+<span class="material-symbols-outlined text-sm font-bold" data-icon="arrow_forward_ios">arrow_forward_ios</span>
+</div>
+</button>
+</footer>
+</body></html>

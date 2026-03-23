@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be_Vietnam_Pro:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-container": "#4c0022",
+              "surface-container-highest": "#cde0ea",
+              "tertiary-container": "#fae2ea",
+              "surface-container-low": "#e4f3fc",
+              "background": "#ffffff",
+              "surface-tint": "#a7295a",
+              "on-tertiary-container": "#615157",
+              "primary-container": "#ff709f",
+              "on-surface": "#243036",
+              "on-error": "#ffefef",
+              "surface-container": "#f8fafd",
+              "on-tertiary-fixed": "#4e3f45",
+              "inverse-primary": "#fd6c9c",
+              "primary-fixed": "#ff709f",
+              "outline": "#6c7980",
+              "tertiary-fixed": "#fae2ea",
+              "error-dim": "#a70138",
+              "primary-fixed-dim": "#f06292",
+              "inverse-surface": "#041015",
+              "on-secondary-fixed-variant": "#714355",
+              "tertiary-fixed-dim": "#ebd4dc",
+              "secondary-fixed": "#fec1d6",
+              "on-background": "#243036",
+              "primary": "#f4648e",
+              "error": "#b41340",
+              "surface-container-high": "#d4e5ef",
+              "surface-container-lowest": "#ffffff",
+              "on-surface-variant": "#515d64",
+              "error-container": "#f74b6d",
+              "on-tertiary": "#ffeff3",
+              "surface-variant": "#f0f4f8",
+              "on-primary-fixed-variant": "#5d002b",
+              "on-secondary-container": "#663a4b",
+              "secondary-container": "#fec1d6",
+              "outline-variant": "#a2afb6",
+              "on-primary": "#ffffff",
+              "on-primary-fixed": "#000000",
+              "secondary-fixed-dim": "#efb3c8",
+              "on-secondary": "#ffeff2",
+              "inverse-on-surface": "#929fa6",
+              "primary-dim": "#971b4e",
+              "surface-dim": "#c3d7e3",
+              "on-error-container": "#510017",
+              "on-secondary-fixed": "#502738",
+              "surface": "#ffffff",
+              "secondary-dim": "#6f4253",
+              "on-tertiary-fixed-variant": "#6c5a61",
+              "tertiary-dim": "#5c4b52",
+              "secondary": "#7d4d5f",
+              "tertiary": "#68575e",
+              "surface-bright": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body overflow-x-hidden">
+<!-- Main Content Wrapper -->
+<main class="min-h-screen w-full flex flex-col items-center px-4 py-12 lg:px-24">
+<div class="w-full max-w-6xl flex flex-col items-center justify-center">
+<!-- Main Camera Preview -->
+<section class="w-full flex flex-col items-center">
+<div class="w-full max-w-4xl aspect-[4/3] relative rounded-[2.5rem] overflow-hidden bg-gray-100 shadow-2xl border-8 border-white">
+<img class="w-full h-full object-cover" data-alt="Live camera feed showing a person getting ready" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYyhdz320d1B2MRViPQCpvQAxWta1rydZYPjj-0M1RQM1Mflw6SKd_YTCZaJQqVfw5Cnlgyvr7EY0a_jVaLZODiRYFrKVhuFx-LdvD9EVD2O_hnGI1_RruwaDyG9Z4lYo0Z8_XMr0j95rmcKDW3HV3oV63pN70xTTYFc3DVyL12dP9FXon6kAP3ERQB--Ma8Puwhd7ok5GYwU7lsdRxq4DcI-gx70AAhJVo_uD1eu7beQ6BmzxT8Z58zRnhRPXMsCGkWpOnbfo5NE"/>
+<!-- Timer Selection Overlay (Top Center) -->
+<div class="absolute top-6 left-1/2 -translate-x-1/2 z-10">
+<div class="bg-white/90 backdrop-blur-md rounded-full px-2 py-2 flex items-center gap-1 shadow-lg border border-white/50">
+<span class="material-symbols-outlined text-primary text-xl ml-3 mr-1">timer</span>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold bg-primary text-white transition-all">3s</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-on-surface hover:bg-black/5 transition-all">5s</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-on-surface hover:bg-black/5 transition-all">10s</button>
+</div>
+</div>
+<!-- Camera Grid Overlay (Subtle) -->
+<div class="absolute inset-0 pointer-events-none border border-white/20"></div>
+</div>
+<!-- Bottom Filter Bar -->
+<div class="w-full mt-12 flex flex-col items-center gap-6">
+<p class="text-sm font-bold text-on-surface/80">Pilih filter</p>
+<div class="w-full max-w-4xl overflow-x-auto no-scrollbar">
+<div class="flex gap-4 pb-4 px-4 min-w-max justify-center">
+<!-- Filter: Normal -->
+<button class="px-8 py-3.5 rounded-full border-2 border-primary bg-white text-primary font-bold transition-all shadow-sm">
+                            Normal
+                        </button>
+<!-- Filter: Lembut -->
+<button class="px-8 py-3.5 rounded-full border border-on-surface/10 bg-white text-on-surface font-bold hover:border-on-surface/30 transition-all">
+                            Lembut
+                        </button>
+<!-- Filter: Hitam-Putih -->
+<button class="px-8 py-3.5 rounded-full border border-on-surface/10 bg-white text-on-surface font-bold hover:border-on-surface/30 transition-all">
+                            Hitam-Putih
+                        </button>
+<!-- Filter: BW-2 -->
+<button class="relative px-8 py-3.5 rounded-full border border-on-surface/10 bg-white text-on-surface font-bold hover:border-on-surface/30 transition-all">
+                            BW-2
+                            <span class="absolute -top-2 -right-1 bg-gradient-to-r from-blue-400 to-emerald-400 text-[8px] text-white px-1.5 py-0.5 rounded-full font-black uppercase">Free</span>
+</button>
+<!-- Filter: BW-3 -->
+<button class="relative px-8 py-3.5 rounded-full border border-on-surface/10 bg-white text-on-surface font-bold hover:border-on-surface/30 transition-all">
+                            BW-3
+                            <span class="absolute -top-2 -right-1 bg-gradient-to-r from-purple-400 to-pink-400 text-[8px] text-white px-1.5 py-0.5 rounded-full font-black uppercase">Free</span>
+</button>
+<!-- Filter: Bright -->
+<button class="relative px-8 py-3.5 rounded-full border border-on-surface/10 bg-white text-on-surface font-bold hover:border-on-surface/30 transition-all">
+                            Bright
+                            <span class="absolute -top-2 -right-1 bg-gradient-to-r from-blue-400 to-indigo-400 text-[8px] text-white px-1.5 py-0.5 rounded-full font-black uppercase">Free</span>
+</button>
+</div>
+</div>
+<!-- Primary Action Button -->
+<button class="mt-4 flex items-center justify-center gap-4 bg-primary text-white px-20 py-6 rounded-full shadow-[0_15px_40px_rgba(244,100,142,0.3)] hover:scale-[1.02] transition-all active:scale-95">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1">photo_camera</span>
+<span class="font-headline font-extrabold text-2xl tracking-tight">Mulai Foto</span>
+</button>
+</div>
+</section>
+</div>
+</main>
+<!-- Background Grain Overlay -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.02] mix-blend-multiply overflow-hidden z-[100]">
+<svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+<filter id="noiseFilter">
+<feturbulence basefrequency="0.65" numoctaves="3" stitchtiles="stitch" type="fractalNoise"></feturbulence>
+</filter>
+<rect filter="url(#noiseFilter)" height="100%" width="100%"></rect>
+</svg>
+</div>
+</body></html>
