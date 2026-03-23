@@ -126,7 +126,7 @@ export const useSessionStore = defineStore('session', () => {
   function resetSession() {
     sessionId.value = null
     printCount.value = 1
-    totalPrice.value = 0
+    totalPrice.value = PRICE_PER_SHEET
     paymentStatus.value = 'idle'
     sessionStatus.value = 'idle'
     photos.value = []
