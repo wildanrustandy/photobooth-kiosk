@@ -45,17 +45,21 @@ function handleStart() {
 
 <template>
   <div class="relative h-screen w-screen overflow-hidden">
-    <div class="absolute inset-0 z-0 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4 opacity-40 scale-105">
-      <div 
-        v-for="(slide, index) in slides" 
-        :key="index"
-        :class="[
-          'rounded-xl overflow-hidden aspect-[3/4] transition-opacity duration-1000',
-          currentSlide === index ? 'opacity-100' : 'opacity-30'
-        ]"
-        :style="{ transform: `rotate(${(index % 3 - 1) * 5}deg) translateY(${index * 10}px)` }"
-      >
-        <img :src="slide" :alt="`Slide ${index + 1}`" class="w-full h-full object-cover" />
+    <div class="absolute inset-0 z-0 flex items-center justify-center">
+      <div class="flex flex-wrap justify-center gap-4 p-4 opacity-40">
+        <div 
+          v-for="(slide, index) in slides" 
+          :key="index"
+          :class="[
+            'rounded-xl overflow-hidden aspect-[3/4] transition-opacity duration-1000 w-40 sm:w-48 md:w-56 lg:w-64'
+          ]"
+          :style="{ 
+            transform: `rotate(${(index % 3 - 1) * 5}deg) translateY(${index * 10}px)`,
+            opacity: currentSlide === index ? 1 : 0.3
+          }"
+        >
+          <img :src="slide" :alt="`Slide ${index + 1}`" class="w-full h-full object-cover" />
+        </div>
       </div>
     </div>
     
@@ -67,37 +71,6 @@ function handleStart() {
       <span class="material-symbols-outlined absolute bottom-1/3 right-1/4 text-secondary opacity-30 text-5xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
       <span class="material-symbols-outlined absolute top-1/3 right-10 text-primary-container opacity-50 text-3xl" style="font-variation-settings: 'FILL' 1;">stars</span>
       <span class="material-symbols-outlined absolute bottom-20 left-10 text-tertiary opacity-40 text-6xl" style="font-variation-settings: 'FILL' 1;">celebration</span>
-    </div>
-    
-    <div class="relative z-20 flex flex-col items-center justify-center h-full gap-12 text-center max-w-2xl px-6">
-      <div class="space-y-4">
-        <h2 class="font-headline font-black text-6xl md:text-8xl text-primary tracking-tighter drop-shadow-sm">
-          Photobooth
-        </h2>
-        <p class="font-body text-on-surface-variant text-lg md:text-xl font-medium max-w-md mx-auto">
-          Siap untuk pose terbaikmu? Ayo buat momen seru hari ini!
-        </p>
-      </div>
-      
-      <div class="relative group">
-        <div class="absolute -inset-4 bg-gradient-to-r from-primary to-primary-container rounded-full blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500" />
-        <button 
-          class="relative bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-extrabold text-3xl md:text-4xl tracking-widest px-20 py-8 rounded-full shadow-[0_20px_40px_rgba(167,41,90,0.25)] hover:scale-105 active:scale-95 transition-all duration-300"
-          @click="handleStart"
-        >
-          MULAI
-        </button>
-      </div>
-      
-      <div class="mt-8 bg-white/60 backdrop-blur-xl border border-white/40 p-4 rounded-xl shadow-lg rotate-2 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary/20 bg-surface-container">
-          <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
-        </div>
-        <div class="text-left">
-          <p class="font-headline font-bold text-on-surface text-sm">Update Terbaru!</p>
-          <p class="font-body text-xs text-on-surface-variant">Filter Rose Glow baru saja ditambahkan</p>
-        </div>
-      </div>
     </div>
     
     <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 py-6 bg-surface/80 backdrop-blur-sm">
@@ -113,5 +86,38 @@ function handleStart() {
         </button>
       </div>
     </header>
+    
+    <div class="absolute inset-0 z-20 flex flex-col items-center justify-center px-6">
+      <div class="flex flex-col items-center gap-12 text-center max-w-2xl w-full">
+        <div class="space-y-4">
+          <h2 class="font-headline font-black text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-primary tracking-tighter drop-shadow-sm">
+            Photobooth
+          </h2>
+          <p class="font-body text-on-surface-variant text-base sm:text-lg md:text-xl font-medium max-w-md mx-auto">
+            Siap untuk pose terbaikmu? Ayo buat momen seru hari ini!
+          </p>
+        </div>
+        
+        <div class="relative group">
+          <div class="absolute -inset-4 bg-gradient-to-r from-primary to-primary-container rounded-full blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500" />
+          <button 
+            class="relative bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-extrabold text-2xl sm:text-3xl md:text-4xl tracking-widest px-12 sm:px-16 md:px-20 py-6 sm:py-7 md:py-8 rounded-full shadow-[0_20px_40px_rgba(167,41,90,0.25)] hover:scale-105 active:scale-95 transition-all duration-300"
+            @click="handleStart"
+          >
+            MULAI
+          </button>
+        </div>
+        
+        <div class="bg-white/60 backdrop-blur-xl border border-white/40 p-4 rounded-xl shadow-lg rotate-2 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary/20 bg-surface-container flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
+          </div>
+          <div class="text-left">
+            <p class="font-headline font-bold text-on-surface text-sm">Update Terbaru!</p>
+            <p class="font-body text-xs text-on-surface-variant">Filter Rose Glow baru saja ditambahkan</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
