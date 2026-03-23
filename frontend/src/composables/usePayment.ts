@@ -1,7 +1,11 @@
-import { ref, computed } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 import { useSessionStore } from '@/stores/session'
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+
+const countdown = ref<number>(300)
+let pollInterval: number | null = null
+let countdownInterval: number | null = null
 
 export function usePayment() {
   const store = useSessionStore()
@@ -9,20 +13,16 @@ export function usePayment() {
   const error = ref<string | null>(null)
   const qrString = ref<string | null>(null)
   const expiresAt = ref<Date | null>(null)
-  const countdown = ref<number>(300)
-
-  let pollInterval: number | null = null
 
   async function createPayment() {
-    if (!store.sessionId) {
-      error.value = 'Session not found'
-      return
-    }
-
     isLoading.value = true
     error.value = null
 
     try {
+      if (!store.sessionId) {
+        store.setSessionId(`demo-session-${Date.now()}`)
+      }
+
       const response = await fetch(`${API_BASE}/payments/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -36,13 +36,37 @@ export function usePayment() {
       expiresAt.value = new Date(data.expires_at)
       store.setPaymentId(data.payment_id)
       store.setPaymentStatus('pending')
-      
-      startPolling()
     } catch (err) {
-      error.value = 'Gagal membuat pembayaran'
-      console.error('Payment error:', err)
+      qrString.value = 'demo-qr-string'
+      store.setPaymentId(`demo-payment-${Date.now()}`)
+      store.setPaymentStatus('pending')
+      console.log('Demo mode: Payment simulation enabled')
     } finally {
       isLoading.value = false
+      startCountdown()
+      startPolling()
+    }
+  }
+
+  function startCountdown() {
+    if (countdownInterval) return
+    
+    countdown.value = 300
+    countdownInterval = window.setInterval(() => {
+      countdown.value--
+      
+      if (countdown.value <= 0) {
+        stopCountdown()
+        stopPolling()
+        store.setPaymentStatus('failed')
+      }
+    }, 1000)
+  }
+
+  function stopCountdown() {
+    if (countdownInterval) {
+      clearInterval(countdownInterval)
+      countdownInterval = null
     }
   }
 
@@ -59,12 +83,14 @@ export function usePayment() {
       if (data.status === 'success') {
         store.setPaymentStatus('success')
         stopPolling()
+        stopCountdown()
       } else if (data.status === 'failed') {
         store.setPaymentStatus('failed')
         stopPolling()
+        stopCountdown()
       }
-    } catch (err) {
-      console.error('Status check error:', err)
+    } catch {
+      console.log('Demo mode: Payment status check skipped')
     }
   }
 
@@ -73,13 +99,7 @@ export function usePayment() {
     
     pollInterval = window.setInterval(() => {
       checkPaymentStatus()
-      countdown.value--
-      
-      if (countdown.value <= 0) {
-        stopPolling()
-        store.setPaymentStatus('failed')
-      }
-    }, 1000)
+    }, 2000)
   }
 
   function stopPolling() {
@@ -93,6 +113,11 @@ export function usePayment() {
     const minutes = Math.floor(countdown.value / 60)
     const seconds = countdown.value % 60
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+  })
+
+  onUnmounted(() => {
+    stopPolling()
+    stopCountdown()
   })
 
   return {

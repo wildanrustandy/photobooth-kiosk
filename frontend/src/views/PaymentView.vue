@@ -11,6 +11,7 @@ const store = useSessionStore()
 const { 
   createPayment, 
   countdown,
+  formattedCountdown,
   stopPolling 
 } = usePayment()
 
@@ -93,7 +94,10 @@ function handleNext() {
             </div>
             
             <div class="mt-8 pt-8 border-t border-outline-variant/10">
-              <CountdownTimer :countdown="countdown" :warning-threshold="60" />
+              <CountdownTimer 
+                :formatted-time="formattedCountdown" 
+                :is-warning="countdown <= 60" 
+              />
             </div>
           </div>
         </div>

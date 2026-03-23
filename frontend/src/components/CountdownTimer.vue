@@ -1,20 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
-const props = defineProps<{
-  countdown: number
-  warningThreshold?: number
+defineProps<{
+  formattedTime: string
+  isWarning?: boolean
 }>()
-
-const isWarning = computed(() => {
-  return props.countdown <= (props.warningThreshold || 60)
-})
-
-const formattedTime = computed(() => {
-  const minutes = Math.floor(props.countdown / 60)
-  const seconds = props.countdown % 60
-  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-})
 </script>
 
 <template>
