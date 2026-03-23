@@ -125,10 +125,21 @@ function openRetakeModal(order: number) {
 
 <template>
   <div class="min-h-screen w-full bg-surface text-on-surface font-body overflow-x-hidden">
-    <main class="min-h-screen w-full flex flex-col items-center px-4 py-12 lg:px-24">
-      <div class="w-full max-w-6xl flex flex-col items-center justify-center">
-        <section class="w-full flex flex-col items-center">
-          <div class="w-full max-w-4xl aspect-[4/3] relative rounded-[2.5rem] overflow-hidden bg-gray-100 shadow-2xl border-8 border-white">
+    <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 py-4 bg-white/50 backdrop-blur-sm">
+      <div class="text-2xl font-black text-primary tracking-tighter font-headline">Photobooth</div>
+      <span class="text-primary font-extrabold font-headline">Step 4/5</span>
+    </header>
+    
+    <main class="pt-24 pb-32 w-full flex flex-col items-center">
+      <!-- Title -->
+      <h1 class="font-headline text-4xl font-black text-on-surface text-center mb-8">
+        {{ store.allPhotosTaken ? 'Foto Selesai!' : 'Sesi Foto' }}
+      </h1>
+      
+      <div class="w-full max-w-5xl flex flex-col lg:flex-row gap-8 items-start px-6">
+        <!-- Camera Preview -->
+        <div class="flex-1 w-full">
+          <div class="aspect-[4/3] relative rounded-[2rem] overflow-hidden bg-surface-container shadow-xl border-4 border-white">
             <video 
               ref="videoRef"
               autoplay 
@@ -153,14 +164,15 @@ function openRetakeModal(order: number) {
               </button>
             </div>
             
-            <div class="absolute top-6 left-1/2 -translate-x-1/2 z-10">
-              <div class="bg-white/90 backdrop-blur-md rounded-full px-2 py-2 flex items-center gap-1 shadow-lg border border-white/50">
-                <span class="material-symbols-outlined text-primary text-xl ml-3 mr-1">timer</span>
+            <!-- Timer Selection -->
+            <div class="absolute top-4 left-1/2 -translate-x-1/2 z-10">
+              <div class="bg-white/90 backdrop-blur-md rounded-full px-2 py-2 flex items-center gap-1 shadow-lg">
+                <span class="material-symbols-outlined text-primary text-lg ml-2 mr-1">timer</span>
                 <button 
                   v-for="t in [3, 5, 10]" 
                   :key="t"
                   :class="[
-                    'w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all',
+                    'w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all',
                     store.timer === t ? 'bg-primary text-white' : 'text-on-surface hover:bg-black/5'
                   ]"
                   :disabled="isCapturing"
@@ -171,76 +183,166 @@ function openRetakeModal(order: number) {
               </div>
             </div>
             
-            <div v-if="showCountdown" class="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
-              <span class="font-headline font-black text-white text-[12rem] animate-pulse drop-shadow-2xl">
-                {{ countdownValue }}
-              </span>
+            <!-- Countdown Overlay -->
+            <div v-if="showCountdown" class="absolute inset-0 bg-black/60 flex items-center justify-center z-20">
+              <div class="text-center">
+                <span class="font-headline font-black text-white text-[8rem] leading-none drop-shadow-2xl">
+                  {{ countdownValue }}
+                </span>
+                <p class="text-white/80 text-xl font-bold mt-4">Foto {{ currentPhotoIndex + 1 }}/4</p>
+              </div>
             </div>
             
-            <div v-if="isCapturing && !showCountdown" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
-              <div class="bg-white/90 backdrop-blur-md rounded-full px-6 py-3 shadow-lg">
+            <!-- Progress During Capture -->
+            <div v-if="isCapturing && !showCountdown" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
+              <div class="bg-white/90 backdrop-blur-md rounded-full px-6 py-2 shadow-lg">
                 <span class="font-headline font-bold text-primary">
-                  Foto {{ currentPhotoIndex + 1 }}/4
+                  Memotret {{ currentPhotoIndex + 1 }}/4...
                 </span>
               </div>
             </div>
           </div>
           
-          <div class="w-full mt-12 flex flex-col items-center gap-6">
-            <p class="text-sm font-bold text-on-surface/80">Pilih filter</p>
+          <!-- Filter Selection -->
+          <div class="mt-6">
+            <p class="text-sm font-bold text-on-surface/60 text-center mb-3">Pilih Filter</p>
             <FilterSelector 
               :selected-filter="store.selectedFilter"
               @select="store.setFilter"
             />
-            
-            <div class="flex gap-4 mt-4">
-              <button 
-                v-if="!isCapturing && !store.allPhotosTaken"
-                class="flex items-center justify-center gap-4 bg-primary text-white px-20 py-6 rounded-full shadow-[0_15px_40px_rgba(244,100,142,0.3)] hover:scale-[1.02] transition-all active:scale-95"
-                @click="startPhotoSession"
-              >
-                <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1">photo_camera</span>
-                <span class="font-headline font-extrabold text-2xl tracking-tight">Mulai Foto</span>
-              </button>
-              
-              <button 
-                v-if="store.allPhotosTaken"
-                class="flex items-center justify-center gap-4 bg-gradient-to-r from-primary to-primary-container text-white px-20 py-6 rounded-full shadow-[0_15px_40px_rgba(167,41,90,0.3)] hover:scale-[1.02] transition-all active:scale-95"
-                @click="handleNext"
-              >
-                <span class="font-headline font-extrabold text-2xl tracking-tight">Berikutnya</span>
-                <span class="material-symbols-outlined text-3xl">arrow_forward</span>
-              </button>
-            </div>
-            
-            <div v-if="store.photosTaken > 0 && store.photosTaken < 4" class="flex gap-2 mt-4">
-              <div 
-                v-for="i in 4" 
-                :key="i"
-                :class="[
-                  'w-16 h-16 rounded-lg overflow-hidden border-2 cursor-pointer transition-all',
-                  i <= store.photosTaken ? 'border-primary' : 'border-outline-variant/30 bg-surface-container'
-                ]"
-                @click="i <= store.photosTaken && openRetakeModal(i)"
-              >
-                <img 
-                  v-if="store.photos[i-1]" 
-                  :src="store.photos[i-1].url" 
-                  class="w-full h-full object-cover"
-                />
-              </div>
-            </div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="mt-6 flex justify-center gap-4">
+            <button 
+              v-if="!isCapturing && !store.allPhotosTaken"
+              class="flex items-center justify-center gap-3 bg-primary text-white px-16 py-5 rounded-full shadow-lg hover:scale-[1.02] transition-all active:scale-95"
+              @click="startPhotoSession"
+            >
+              <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1">photo_camera</span>
+              <span class="font-headline font-extrabold text-xl">Mulai Foto</span>
+            </button>
             
             <button 
               v-if="store.allPhotosTaken"
-              class="text-on-surface-variant font-medium hover:text-primary transition-colors"
+              class="flex items-center justify-center gap-3 bg-gradient-to-r from-primary to-primary-container text-white px-16 py-5 rounded-full shadow-lg hover:scale-[1.02] transition-all active:scale-95"
+              @click="handleNext"
+            >
+              <span class="font-headline font-extrabold text-xl">Berikutnya</span>
+              <span class="material-symbols-outlined text-2xl">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Photo Preview Grid -->
+        <div class="w-full lg:w-80 shrink-0">
+          <div class="bg-surface-container-low rounded-2xl p-6 shadow-lg">
+            <h3 class="font-headline font-bold text-on-surface mb-4 text-center">Preview</h3>
+            
+            <div class="grid grid-cols-2 gap-3">
+              <!-- Photo 1 -->
+              <div 
+                :class="[
+                  'aspect-square rounded-xl overflow-hidden border-4 transition-all cursor-pointer relative group',
+                  store.photosTaken >= 1 ? 'border-white shadow-md hover:border-primary' : 'border-outline-variant/20 bg-surface-container'
+                ]"
+                @click="store.photosTaken >= 1 && openRetakeModal(1)"
+              >
+                <img 
+                  v-if="store.photos.find(p => p.order === 1)" 
+                  :src="store.photos.find(p => p.order === 1)?.url" 
+                  class="w-full h-full object-cover"
+                />
+                <div v-else class="w-full h-full flex items-center justify-center">
+                  <span class="text-on-surface-variant/30 font-headline font-black text-3xl">1</span>
+                </div>
+                <div v-if="store.photosTaken >= 1" class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <span class="material-symbols-outlined text-white text-2xl">refresh</span>
+                </div>
+              </div>
+              
+              <!-- Photo 2 -->
+              <div 
+                :class="[
+                  'aspect-square rounded-xl overflow-hidden border-4 transition-all cursor-pointer relative group',
+                  store.photosTaken >= 2 ? 'border-white shadow-md hover:border-primary' : 'border-outline-variant/20 bg-surface-container'
+                ]"
+                @click="store.photosTaken >= 2 && openRetakeModal(2)"
+              >
+                <img 
+                  v-if="store.photos.find(p => p.order === 2)" 
+                  :src="store.photos.find(p => p.order === 2)?.url" 
+                  class="w-full h-full object-cover"
+                />
+                <div v-else class="w-full h-full flex items-center justify-center">
+                  <span class="text-on-surface-variant/30 font-headline font-black text-3xl">2</span>
+                </div>
+                <div v-if="store.photosTaken >= 2" class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <span class="material-symbols-outlined text-white text-2xl">refresh</span>
+                </div>
+              </div>
+              
+              <!-- Photo 3 -->
+              <div 
+                :class="[
+                  'aspect-square rounded-xl overflow-hidden border-4 transition-all cursor-pointer relative group',
+                  store.photosTaken >= 3 ? 'border-white shadow-md hover:border-primary' : 'border-outline-variant/20 bg-surface-container'
+                ]"
+                @click="store.photosTaken >= 3 && openRetakeModal(3)"
+              >
+                <img 
+                  v-if="store.photos.find(p => p.order === 3)" 
+                  :src="store.photos.find(p => p.order === 3)?.url" 
+                  class="w-full h-full object-cover"
+                />
+                <div v-else class="w-full h-full flex items-center justify-center">
+                  <span class="text-on-surface-variant/30 font-headline font-black text-3xl">3</span>
+                </div>
+                <div v-if="store.photosTaken >= 3" class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <span class="material-symbols-outlined text-white text-2xl">refresh</span>
+                </div>
+              </div>
+              
+              <!-- Photo 4 -->
+              <div 
+                :class="[
+                  'aspect-square rounded-xl overflow-hidden border-4 transition-all cursor-pointer relative group',
+                  store.photosTaken >= 4 ? 'border-white shadow-md hover:border-primary' : 'border-outline-variant/20 bg-surface-container'
+                ]"
+                @click="store.photosTaken >= 4 && openRetakeModal(4)"
+              >
+                <img 
+                  v-if="store.photos.find(p => p.order === 4)" 
+                  :src="store.photos.find(p => p.order === 4)?.url" 
+                  class="w-full h-full object-cover"
+                />
+                <div v-else class="w-full h-full flex items-center justify-center">
+                  <span class="text-on-surface-variant/30 font-headline font-black text-3xl">4</span>
+                </div>
+                <div v-if="store.photosTaken >= 4" class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <span class="material-symbols-outlined text-white text-2xl">refresh</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Progress Info -->
+            <div class="mt-4 text-center">
+              <p class="text-sm text-on-surface-variant">
+                {{ store.photosTaken }}/4 foto selesai
+              </p>
+            </div>
+            
+            <!-- Retake All Button -->
+            <button 
+              v-if="store.allPhotosTaken"
+              class="mt-4 w-full py-3 rounded-full border-2 border-outline-variant text-on-surface-variant font-bold hover:bg-surface-container transition-all flex items-center justify-center gap-2"
               @click="retakeAll"
             >
-              <span class="material-symbols-outlined text-sm align-middle mr-1">refresh</span>
+              <span class="material-symbols-outlined text-lg">refresh</span>
               Retake Semua
             </button>
           </div>
-        </section>
+        </div>
       </div>
     </main>
     
