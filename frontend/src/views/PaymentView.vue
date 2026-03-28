@@ -32,6 +32,15 @@ watch(qrString, async (newVal) => {
   }
 })
 
+watch(() => store.paymentStatus, (newStatus) => {
+  if (newStatus === 'success') {
+    // Tunggu 2.5 detik agar user bisa melihat pesan berhasil sebelum pindah layar
+    setTimeout(() => {
+      handleNext()
+    }, 2500)
+  }
+})
+
 const isDemo = import.meta.env.DEV || !import.meta.env.VITE_API_BASE
 
 onMounted(async () => {
@@ -80,7 +89,16 @@ function handleSimulatePayment() {
       </div>
     </header>
     
-    <main class="flex-1 min-h-0 px-6 max-w-4xl mx-auto flex flex-col items-center overflow-hidden py-4 w-full">
+    <main class="flex-1 min-h-0 px-6 max-w-4xl mx-auto flex flex-col items-center overflow-hidden py-4 w-full relative">
+      <!-- Success Overlay -->
+      <div v-if="store.paymentStatus === 'success'" class="absolute inset-0 z-50 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center rounded-3xl">
+        <div class="w-32 h-32 bg-green-500 rounded-full flex items-center justify-center shadow-2xl mb-8 scale-110 animate-pulse">
+          <span class="material-symbols-outlined text-white text-7xl font-bold" style="font-variation-settings: 'FILL' 1;">check</span>
+        </div>
+        <h2 class="text-4xl font-extrabold text-on-surface font-headline mb-3 tracking-tight">Pembayaran Berhasil!</h2>
+        <p class="text-xl text-on-surface-variant font-body font-medium animate-pulse">Menyiapkan Sesi Foto...</p>
+      </div>
+
       <ProgressIndicator :current-step="2" :total-steps="5" class="mb-4 flex-none" />
       
       <section class="w-full text-center mb-6 flex-none">
@@ -208,6 +226,7 @@ function handleSimulatePayment() {
       </button>
       
       <button 
+        v-if="store.paymentStatus === 'pending'"
         class="flex flex-col items-center justify-center text-on-surface bg-surface-container-lowest rounded-full px-10 py-4 shadow-sm hover:brightness-110 transition-all active:scale-90 duration-200 touch-none"
         @click="handleBack"
       >
@@ -221,14 +240,11 @@ function handleSimulatePayment() {
         </span>
       </div>
       
-      <button 
-        v-if="store.paymentStatus === 'success'"
-        class="flex flex-col items-center justify-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full px-12 py-4 scale-110 shadow-lg hover:brightness-110 transition-all active:scale-90 duration-200 touch-none"
-        @click="handleNext"
-      >
-        <span class="material-symbols-outlined text-xl mb-1">arrow_forward_ios</span>
-        <span class="font-body font-bold uppercase tracking-widest text-xs">Next</span>
-      </button>
+      <div v-if="store.paymentStatus === 'success'" class="flex flex-col items-center text-green-500 animate-pulse">
+        <span class="font-headline font-bold text-sm uppercase tracking-[0.2em]">
+          Lanjut otomatis...
+        </span>
+      </div>
     </footer>
   </div>
 </template>
