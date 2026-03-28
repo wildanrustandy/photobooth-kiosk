@@ -146,3 +146,40 @@ class AuthService:
             return True
 
         return False
+
+    @staticmethod
+    async def check_assignment(db: AsyncSession, device_id: str) -> dict:
+        """Check if device is assigned to a booth."""
+        # Find device session
+        result = await db.execute(
+            select(DeviceSession).where(DeviceSession.device_id == device_id)
+        )
+        device_session = result.scalar_one_or_none()
+
+        if not device_session:
+            return {"device_id": device_id, "booth": None, "is_assigned": False}
+
+        # Check if device is assigned to a booth
+        if not device_session.booth_id:
+            return {"device_id": device_id, "booth": None, "is_assigned": False}
+
+        # Get booth info
+        result = await db.execute(
+            select(Booth).where(Booth.id == device_session.booth_id)
+        )
+        booth = result.scalar_one_or_none()
+
+        if not booth:
+            return {"device_id": device_id, "booth": None, "is_assigned": False}
+
+        return {
+            "device_id": device_id,
+            "booth": {
+                "id": str(booth.id),
+                "name": booth.name,
+                "location": booth.location,
+                "config": booth.config,
+                "is_active": booth.is_active,
+            },
+            "is_assigned": True,
+        }

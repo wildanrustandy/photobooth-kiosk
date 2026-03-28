@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Transactions List | Energetic Curator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline-variant": "#b2a6d5",
+                        "on-primary-container": "#14007e",
+                        "on-secondary": "#f7f0ff",
+                        "surface-container-highest": "#e2d7ff",
+                        "secondary-fixed-dim": "#cbbaff",
+                        "surface-container": "#ede4ff",
+                        "primary-container": "#9795ff",
+                        "primary-fixed": "#9795ff",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#7b719c",
+                        "on-primary-fixed-variant": "#1a0099",
+                        "secondary-fixed": "#d8caff",
+                        "inverse-primary": "#8582ff",
+                        "tertiary-fixed": "#ff8eaf",
+                        "background": "#faf4ff",
+                        "on-error": "#ffefef",
+                        "on-error-container": "#510017",
+                        "tertiary-fixed-dim": "#ff75a2",
+                        "primary-dim": "#3d30d4",
+                        "on-tertiary-fixed": "#380017",
+                        "error": "#b41340",
+                        "tertiary-dim": "#971b4e",
+                        "on-primary-fixed": "#000000",
+                        "surface": "#faf4ff",
+                        "on-surface": "#32294f",
+                        "on-background": "#32294f",
+                        "error-dim": "#a70138",
+                        "on-tertiary": "#ffeff1",
+                        "on-surface-variant": "#5f557f",
+                        "on-secondary-fixed-variant": "#573da6",
+                        "surface-variant": "#e2d7ff",
+                        "secondary": "#6249b2",
+                        "on-secondary-fixed": "#3a1b88",
+                        "surface-dim": "#dacdff",
+                        "surface-container-high": "#e8deff",
+                        "on-tertiary-container": "#66002f",
+                        "secondary-dim": "#563ca5",
+                        "tertiary": "#a7295a",
+                        "tertiary-container": "#ff8eaf",
+                        "primary-fixed-dim": "#8885ff",
+                        "surface-tint": "#4a40e0",
+                        "secondary-container": "#d8caff",
+                        "on-secondary-container": "#4e339c",
+                        "surface-container-low": "#f5eeff",
+                        "on-primary": "#f4f1ff",
+                        "inverse-on-surface": "#a296c4",
+                        "surface-bright": "#faf4ff",
+                        "primary": "#4a40e0",
+                        "error-container": "#f74b6d",
+                        "on-tertiary-fixed-variant": "#760038",
+                        "inverse-surface": "#10062d"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #faf4ff; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-6 bg-indigo-50/50 dark:bg-slate-900/50 h-screen w-64 border-r-0 font-['Plus_Jakarta_Sans'] antialiased tracking-tight">
+<div class="mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-dim flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="photo_camera">photo_camera</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-indigo-900 dark:text-indigo-100 leading-tight">Energetic Curator</h1>
+<p class="text-xs text-on-surface-variant">Premium Studio</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 text-indigo-900/60 dark:text-indigo-400/60 hover:text-indigo-900 dark:hover:text-indigo-200 hover:bg-white/80 dark:hover:bg-indigo-900/30 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-medium">Home</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-indigo-950 text-indigo-700 dark:text-indigo-200 rounded-xl font-bold transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-medium">Invoices</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-indigo-900/60 dark:text-indigo-400/60 hover:text-indigo-900 dark:hover:text-indigo-200 hover:bg-white/80 dark:hover:bg-indigo-900/30 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="photo_library">photo_library</span>
+<span class="font-medium">Gallery</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-indigo-900/60 dark:text-indigo-400/60 hover:text-indigo-900 dark:hover:text-indigo-200 hover:bg-white/80 dark:hover:bg-indigo-900/30 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="insert_chart">insert_chart</span>
+<span class="font-medium">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-indigo-900/60 dark:text-indigo-400/60 hover:text-indigo-900 dark:hover:text-indigo-200 hover:bg-white/80 dark:hover:bg-indigo-900/30 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-indigo-100 flex flex-col gap-2">
+<button class="w-full py-3 px-4 mb-4 bg-primary text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+<span>New Event</span>
+</button>
+<a class="flex items-center gap-3 px-4 py-3 text-indigo-900/60 hover:text-indigo-900 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-medium">Help</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-indigo-900/60 hover:text-indigo-900 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 left-64 h-20 flex justify-between items-center px-8 z-40 bg-white/15 dark:bg-slate-950/15 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(87,61,166,0.06)]">
+<div class="flex items-center gap-6">
+<h2 class="text-xl font-extrabold tracking-tight text-on-surface">Dashboard</h2>
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg" data-icon="search">search</span>
+<input class="bg-surface-container-highest/50 border-none rounded-xl py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary/30 transition-all outline-none" placeholder="Search transactions..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined" data-icon="apps">apps</span>
+</button>
+<div class="h-8 w-px bg-outline-variant/30 mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-bold text-on-surface">Admin User</p>
+<p class="text-xs text-on-surface-variant">System Manager</p>
+</div>
+<img class="w-10 h-10 rounded-xl object-cover ring-2 ring-primary-container/20" data-alt="close-up portrait of a professional man in a studio with soft overhead lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBooVNGf5QhLptF1ZSBs6aALuIOILCK6noPIPKy_Iz0tM5cOQ2bDYe6Wf5LdiT_NGS99weH1U9fMZba_t8AoQWp0gjKJWvzS73fBradqMD-3FP26KE5lH60AV4rHVnfv7xYZXec9FYAWYAvUlUiJlkxEK3FZWpbktvSWB2FMYkjKJa4GBqFAo3Gjzz7YsJTlFT9DzOUNiRBGzLBWTyK3MImmnz3Wni7bPSBkqR_xxXLZQr8Va0CV3B6P3INJ1GrYxSc29fxxGUf1o0"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="pt-28 px-8 pb-12 space-y-8">
+<!-- Filter Bar -->
+<section class="bg-surface-container-lowest rounded-[2rem] p-6 shadow-sm border border-outline-variant/10">
+<div class="flex flex-wrap items-center gap-4">
+<div class="flex-1 min-w-[200px]">
+<label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 ml-1">Date Range</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm font-medium text-on-surface focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer">
+<option>Last 7 Days</option>
+<option>Last 30 Days</option>
+<option>This Month</option>
+<option>Custom Range</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="flex-1 min-w-[200px]">
+<label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 ml-1">Status</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm font-medium text-on-surface focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer">
+<option>All Status</option>
+<option>SUCCESS</option>
+<option>PENDING</option>
+<option>FAILED</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="flex-1 min-w-[200px]">
+<label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 ml-1">Payment Method</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm font-medium text-on-surface focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer">
+<option>All Methods</option>
+<option>QRIS</option>
+<option>Credit Card</option>
+<option>Bank Transfer</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="self-end pb-0.5">
+<button class="bg-primary text-white h-[46px] px-6 rounded-xl font-bold flex items-center gap-2 hover:bg-primary-dim transition-colors shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                            Apply Filters
+                        </button>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-12 gap-8">
+<!-- Transactions Table -->
+<div class="col-span-12 lg:col-span-9 space-y-6">
+<div class="bg-surface-container-lowest rounded-[2rem] overflow-hidden shadow-sm border border-outline-variant/10">
+<div class="p-6 border-b border-surface-container flex justify-between items-center">
+<h3 class="text-lg font-bold text-on-surface">Recent Transactions</h3>
+<span class="text-xs font-medium text-on-surface-variant bg-surface-container-low px-3 py-1 rounded-full">Showing 128 results</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-6 py-4 text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest">ID Sesi</th>
+<th class="px-6 py-4 text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest">Reference ID</th>
+<th class="px-6 py-4 text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest">Waktu</th>
+<th class="px-6 py-4 text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest">Jumlah Cetak</th>
+<th class="px-6 py-4 text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest">Total (Rp)</th>
+<th class="px-6 py-4 text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5"><a class="text-primary font-bold hover:underline" href="#">SES-9921</a></td>
+<td class="px-6 py-5 text-sm font-medium text-on-surface-variant">TX-882910</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">24 Oct, 14:20</td>
+<td class="px-6 py-5 text-sm font-semibold">2</td>
+<td class="px-6 py-5 text-sm font-bold">75,000</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary-container/20 text-on-primary-container">SUCCESS</span>
+</td>
+<td class="px-6 py-5">
+<button class="text-[10px] font-extrabold text-primary flex items-center gap-1 group-hover:gap-2 transition-all uppercase tracking-tighter">
+                                                LIHAT DETAIL
+                                                <span class="material-symbols-outlined text-xs" data-icon="chevron_right">chevron_right</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5"><a class="text-primary font-bold hover:underline" href="#">SES-9918</a></td>
+<td class="px-6 py-5 text-sm font-medium text-on-surface-variant">TX-882905</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">24 Oct, 13:55</td>
+<td class="px-6 py-5 text-sm font-semibold">1</td>
+<td class="px-6 py-5 text-sm font-bold">45,000</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-secondary-container text-on-secondary-container">PENDING</span>
+</td>
+<td class="px-6 py-5">
+<button class="text-[10px] font-extrabold text-primary flex items-center gap-1 group-hover:gap-2 transition-all uppercase tracking-tighter">
+                                                LIHAT DETAIL
+                                                <span class="material-symbols-outlined text-xs" data-icon="chevron_right">chevron_right</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5"><a class="text-primary font-bold hover:underline" href="#">SES-9915</a></td>
+<td class="px-6 py-5 text-sm font-medium text-on-surface-variant">TX-882898</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">24 Oct, 13:12</td>
+<td class="px-6 py-5 text-sm font-semibold">4</td>
+<td class="px-6 py-5 text-sm font-bold">120,000</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-error-container/20 text-error">FAILED</span>
+</td>
+<td class="px-6 py-5">
+<button class="text-[10px] font-extrabold text-primary flex items-center gap-1 group-hover:gap-2 transition-all uppercase tracking-tighter">
+                                                LIHAT DETAIL
+                                                <span class="material-symbols-outlined text-xs" data-icon="chevron_right">chevron_right</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5"><a class="text-primary font-bold hover:underline" href="#">SES-9912</a></td>
+<td class="px-6 py-5 text-sm font-medium text-on-surface-variant">TX-882888</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">24 Oct, 12:45</td>
+<td class="px-6 py-5 text-sm font-semibold">2</td>
+<td class="px-6 py-5 text-sm font-bold">75,000</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary-container/20 text-on-primary-container">SUCCESS</span>
+</td>
+<td class="px-6 py-5">
+<button class="text-[10px] font-extrabold text-primary flex items-center gap-1 group-hover:gap-2 transition-all uppercase tracking-tighter">
+                                                LIHAT DETAIL
+                                                <span class="material-symbols-outlined text-xs" data-icon="chevron_right">chevron_right</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-6 bg-surface-container-low/30 flex justify-center">
+<button class="text-xs font-bold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2">
+                                Load more transactions
+                                <span class="material-symbols-outlined text-sm" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+</div>
+</div>
+<!-- Revenue Forecast Card -->
+<div class="relative overflow-hidden rounded-[2.5rem] p-8 bg-indigo-950 text-white shadow-2xl shadow-indigo-500/20">
+<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div>
+<h4 class="text-indigo-200 text-xs font-bold uppercase tracking-[0.2em] mb-2">Revenue Forecast</h4>
+<div class="flex items-baseline gap-4">
+<span class="text-5xl font-extrabold tracking-tighter">Rp 45.2M</span>
+<span class="flex items-center text-primary-container font-bold text-lg bg-white/10 px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="trending_up">trending_up</span>
+                                        +12.4%
+                                    </span>
+</div>
+<p class="mt-4 text-indigo-300/80 text-sm max-w-sm leading-relaxed">
+                                    Based on current growth trends, we expect your monthly volume to exceed goals by next quarter.
+                                </p>
+</div>
+<div class="flex -space-x-4">
+<div class="w-16 h-16 rounded-full border-4 border-indigo-950 bg-indigo-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl text-indigo-100" data-icon="insights">insights</span>
+</div>
+<div class="w-16 h-16 rounded-full border-4 border-indigo-950 bg-pink-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl text-white" data-icon="auto_graph" data-weight="fill" style="font-variation-settings: 'FILL' 1;">auto_graph</span>
+</div>
+</div>
+</div>
+<!-- Background decorative shapes -->
+<div class="absolute -right-20 -top-20 w-80 h-80 bg-primary/20 rounded-full blur-[100px]"></div>
+<div class="absolute -left-20 -bottom-20 w-80 h-80 bg-pink-500/10 rounded-full blur-[80px]"></div>
+</div>
+</div>
+<!-- Right Sidebar / Secondary Info -->
+<div class="col-span-12 lg:col-span-3 space-y-8">
+<!-- Popular Prints Card -->
+<div class="bg-surface-container-lowest rounded-[2rem] p-6 shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-bold text-on-surface">Popular Prints</h3>
+<span class="material-symbols-outlined text-tertiary" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="space-y-8">
+<div>
+<div class="flex justify-between items-end mb-3">
+<div>
+<p class="text-sm font-bold text-on-surface">Standard Strip</p>
+<p class="text-[10px] text-on-surface-variant font-medium">Classic 2x6 booth favorite</p>
+</div>
+<span class="text-sm font-black text-primary">64%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-1000" style="width: 64%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-3">
+<div>
+<p class="text-sm font-bold text-on-surface">4x6 Single</p>
+<p class="text-[10px] text-on-surface-variant font-medium">High-gloss postcard size</p>
+</div>
+<span class="text-sm font-black text-tertiary">22%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full transition-all duration-1000" style="width: 22%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-3">
+<div>
+<p class="text-sm font-bold text-on-surface">Square Collage</p>
+<p class="text-[10px] text-on-surface-variant font-medium">Instagram-ready format</p>
+</div>
+<span class="text-sm font-black text-on-secondary-container">14%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary-dim rounded-full transition-all duration-1000" style="width: 14%"></div>
+</div>
+</div>
+</div>
+<button class="mt-8 w-full py-4 rounded-xl border-2 border-dashed border-outline-variant/30 text-xs font-bold text-on-surface-variant hover:border-primary/50 hover:text-primary transition-all">
+                            View Detailed Layout Stats
+                        </button>
+</div>
+<!-- Promo / Notification Card -->
+<div class="bg-gradient-to-br from-tertiary to-pink-700 rounded-[2rem] p-6 text-white overflow-hidden relative group">
+<div class="relative z-10">
+<p class="text-[10px] font-extrabold uppercase tracking-widest opacity-80 mb-2">Curator Tip</p>
+<h4 class="text-lg font-bold leading-tight mb-4">Level up your studio experience</h4>
+<p class="text-sm opacity-90 leading-relaxed mb-6">
+                                Update to Version 4.2 to unlock multi-filter transaction exports and real-time revenue syncing.
+                            </p>
+<button class="w-full py-3 bg-white text-tertiary rounded-xl font-bold text-sm shadow-xl shadow-black/10 hover:scale-[0.98] transition-all">
+                                Update Now
+                            </button>
+</div>
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-9xl opacity-10 rotate-12 group-hover:rotate-0 transition-transform duration-700" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<!-- Support Card -->
+<div class="bg-surface-container-low rounded-[2rem] p-6 text-center">
+<div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+<span class="material-symbols-outlined text-primary" data-icon="support_agent">support_agent</span>
+</div>
+<h4 class="font-bold text-on-surface mb-2">Need Assistance?</h4>
+<p class="text-xs text-on-surface-variant mb-6 leading-relaxed px-4">Our dedicated curator support team is available 24/7 for technical issues.</p>
+<a class="inline-block text-xs font-extrabold text-primary uppercase tracking-widest border-b-2 border-primary pb-1 hover:text-primary-dim hover:border-primary-dim transition-all" href="#">
+                            Chat with Support
+                        </a>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

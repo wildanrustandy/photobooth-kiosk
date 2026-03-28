@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { useDeviceStore } from './device'
 
 export type PaymentStatus = 'idle' | 'pending' | 'success' | 'failed'
 export type SessionStatus = 'idle' | 'pending' | 'paid' | 'completed' | 'cancelled'
@@ -13,14 +14,22 @@ export interface Photo {
 
 export const useSessionStore = defineStore('session', () => {
   // Constants - defined first
-  const PRICE_PER_SHEET = 35000
+  const DEFAULT_PRICE_PER_SHEET = 35000
   const MIN_PRINT_COUNT = 1
   const MAX_PRINT_COUNT = 10
+
+  // Get device store for booth config
+  const deviceStore = useDeviceStore()
+
+  // Computed price from booth config
+  const pricePerSheet = computed(() => {
+    return deviceStore.booth?.config?.price_per_print || DEFAULT_PRICE_PER_SHEET
+  })
 
   // State
   const sessionId = ref<string | null>(null)
   const printCount = ref<number>(1)
-  const totalPrice = ref<number>(PRICE_PER_SHEET)  // Initialize with default price (1 sheet)
+  const totalPrice = ref<number>(DEFAULT_PRICE_PER_SHEET)  // Initialize with default price (1 sheet)
   const paymentStatus = ref<PaymentStatus>('idle')
   const sessionStatus = ref<SessionStatus>('idle')
   const photos = ref<Photo[]>([])
@@ -38,6 +47,14 @@ export const useSessionStore = defineStore('session', () => {
     }).format(totalPrice.value)
   })
 
+  const formattedPricePerSheet = computed(() => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0
+    }).format(pricePerSheet.value)
+  })
+
   const canProceed = computed(() => {
     return printCount.value >= MIN_PRINT_COUNT && printCount.value <= MAX_PRINT_COUNT
   })
@@ -46,24 +63,34 @@ export const useSessionStore = defineStore('session', () => {
 
   const allPhotosTaken = computed(() => photos.value.length === 4)
 
+  // Initialize price when booth config is loaded
+  function initFromBoothConfig() {
+    const config = deviceStore.booth?.config
+    if (config) {
+      timer.value = config.timer_default || 5
+      selectedFilter.value = config.filters?.[0] || 'Normal'
+      totalPrice.value = printCount.value * (config.price_per_print || DEFAULT_PRICE_PER_SHEET)
+    }
+  }
+
   function setPrintCount(count: number) {
     if (count >= MIN_PRINT_COUNT && count <= MAX_PRINT_COUNT) {
       printCount.value = count
-      totalPrice.value = count * PRICE_PER_SHEET
+      totalPrice.value = count * pricePerSheet.value
     }
   }
 
   function incrementPrintCount() {
     if (printCount.value < MAX_PRINT_COUNT) {
       printCount.value++
-      totalPrice.value = printCount.value * PRICE_PER_SHEET
+      totalPrice.value = printCount.value * pricePerSheet.value
     }
   }
 
   function decrementPrintCount() {
     if (printCount.value > MIN_PRINT_COUNT) {
       printCount.value--
-      totalPrice.value = printCount.value * PRICE_PER_SHEET
+      totalPrice.value = printCount.value * pricePerSheet.value
     }
   }
 
@@ -128,12 +155,12 @@ export const useSessionStore = defineStore('session', () => {
   function resetSession() {
     sessionId.value = null
     printCount.value = 1
-    totalPrice.value = PRICE_PER_SHEET
+    totalPrice.value = pricePerSheet.value
     paymentStatus.value = 'idle'
     sessionStatus.value = 'idle'
     photos.value = []
-    selectedFilter.value = 'Normal'
-    timer.value = 5
+    selectedFilter.value = deviceStore.booth?.config?.filters?.[0] || 'Normal'
+    timer.value = deviceStore.booth?.config?.timer_default || 5
     currentStep.value = 0
     paymentId.value = null
     downloadToken.value = null
@@ -152,12 +179,15 @@ export const useSessionStore = defineStore('session', () => {
     paymentId,
     downloadToken,
     formattedTotalPrice,
+    formattedPricePerSheet,
+    pricePerSheet,
     canProceed,
     photosTaken,
     allPhotosTaken,
-    PRICE_PER_SHEET,
+    PRICE_PER_SHEET: DEFAULT_PRICE_PER_SHEET,
     MIN_PRINT_COUNT,
     MAX_PRINT_COUNT,
+    initFromBoothConfig,
     setPrintCount,
     incrementPrintCount,
     decrementPrintCount,
