@@ -74,6 +74,11 @@ export function useDevice() {
 
       const data = await response.json()
 
+      // Update device token if a new one is returned (with booth_id)
+      if (data.device_token) {
+        store.setDevice(store.device_id!, data.device_token)
+      }
+
       if (data.booth) {
         store.setBooth(data.booth)
         return true

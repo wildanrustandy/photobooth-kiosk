@@ -2,13 +2,17 @@ import requests
 import json
 import hashlib
 import hmac
-from datetime import datetime
+from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel
 from database import get_db
 from config import settings
+from models.session import Session
+from models.payment import Payment
+from models.booth import Booth
+from sqlalchemy import select
 
 router = APIRouter(prefix="/api/payment", tags=["Payment"])
 security = HTTPBearer()
@@ -19,6 +23,7 @@ class PaymentRequest(BaseModel):
     product_name: str
     qty: str = "1"
     booth_id: str = None
+    print_count: int = 1
 
 
 @router.post("/create")
@@ -27,19 +32,38 @@ async def create_payment(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: AsyncSession = Depends(get_db),
 ):
-    """Create a payment request via iPaymu."""
-    # Get booth info from device token
+    """Create a payment request via iPaymu and save to database."""
     from utils.security import verify_device_token
 
     payload = verify_device_token(credentials.credentials)
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid device token")
 
+    device_id = payload.get("device_id")
     booth_id = payload.get("booth_id") or request.booth_id
+
     if not booth_id:
         raise HTTPException(status_code=400, detail="Booth ID is required")
 
+    # Verify booth exists
+    booth_result = await db.execute(select(Booth).where(Booth.id == booth_id))
+    booth = booth_result.scalar_one_or_none()
+    if not booth:
+        raise HTTPException(status_code=404, detail="Booth not found")
+
+    # Create session record
+    session = Session(
+        booth_id=booth_id,
+        device_id=device_id,
+        status="pending",
+        print_count=request.print_count,
+        total_price=float(request.amount),
+    )
+    db.add(session)
+    await db.flush()  # Get session ID without committing
+
     # Create payment request to iPaymu
+    reference_id = "PB" + datetime.today().strftime("%Y%m%d%H%M%S")
     body = {
         "name": "Kiosk User",
         "phone": "08123456789",
@@ -47,7 +71,7 @@ async def create_payment(
         "amount": request.amount,
         "notifyUrl": settings.ipaymu_notify_url,
         "comments": f"Photobooth Payment - {request.product_name}",
-        "referenceId": "PB" + datetime.today().strftime("%Y%m%d%H%M%S"),
+        "referenceId": reference_id,
         "paymentMethod": "qris",
         "paymentChannel": "qris",
     }
@@ -75,8 +99,30 @@ async def create_payment(
     data = resp.json()
 
     if data.get("Status") == 200:
-        return data.get("Data")
+        payment_data = data.get("Data", {})
 
+        # Create payment record
+        payment = Payment(
+            session_id=session.id,
+            booth_id=booth_id,
+            amount=float(request.amount),
+            status="pending",
+            provider="qris",
+            qr_string=payment_data.get("QrString"),
+            transaction_id=payment_data.get("TransactionId"),
+            expires_at=datetime.utcnow() + timedelta(minutes=15),
+        )
+        db.add(payment)
+        await db.commit()
+
+        return {
+            "QrString": payment_data.get("QrString"),
+            "TransactionId": payment_data.get("TransactionId"),
+            "ReferenceId": reference_id,
+            "SessionId": str(session.id),
+        }
+
+    await db.rollback()
     raise HTTPException(status_code=400, detail=data)
 
 
@@ -153,11 +199,91 @@ async def payment_notify(request: Request, db: AsyncSession = Depends(get_db)):
     status = data.get("status", "UNKNOWN")
     trx_id = data.get("trx_id", data.get("transaction_id", "UNKNOWN"))
 
-    if status == "berhasil":
-        # TODO: Update database status transaksi menjadi PAID
-        pass
-    elif status == "expired" or status == "-2":
-        # TODO: Update database status transaksi menjadi EXPIRED/FAILED
-        pass
+    # Update payment status in database
+    if trx_id and trx_id != "UNKNOWN":
+        payment_result = await db.execute(
+            select(Payment).where(Payment.transaction_id == trx_id)
+        )
+        payment = payment_result.scalar_one_or_none()
+
+        if payment:
+            if status == "berhasil" or status == "1":
+                payment.status = "success"
+                payment.paid_at = datetime.utcnow()
+
+                # Update session status
+                session_result = await db.execute(
+                    select(Session).where(Session.id == payment.session_id)
+                )
+                session = session_result.scalar_one_or_none()
+                if session:
+                    session.status = "paid"
+
+                await db.commit()
+            elif status == "expired" or status == "-2" or status == "2":
+                payment.status = "failed"
+                await db.commit()
 
     return {"status": "success", "trx_id": trx_id, "received_data": data}
+
+
+@router.post("/demo/create")
+async def create_demo_payment(
+    request: PaymentRequest,
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: AsyncSession = Depends(get_db),
+):
+    """Create a demo payment for testing (auto-success)."""
+    from utils.security import verify_device_token
+    import uuid
+
+    payload = verify_device_token(credentials.credentials)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid device token")
+
+    device_id = payload.get("device_id")
+    booth_id = payload.get("booth_id") or request.booth_id
+
+    if not booth_id:
+        raise HTTPException(status_code=400, detail="Booth ID is required")
+
+    # Verify booth exists
+    booth_result = await db.execute(select(Booth).where(Booth.id == booth_id))
+    booth = booth_result.scalar_one_or_none()
+    if not booth:
+        raise HTTPException(status_code=404, detail="Booth not found")
+
+    # Create session record
+    session = Session(
+        booth_id=booth_id,
+        device_id=device_id,
+        status="paid",
+        print_count=request.print_count,
+        total_price=float(request.amount),
+    )
+    db.add(session)
+    await db.flush()
+
+    # Create payment record with success status
+    demo_transaction_id = f"DEMO-{uuid.uuid4().hex[:12].upper()}"
+    payment = Payment(
+        session_id=session.id,
+        booth_id=booth_id,
+        amount=float(request.amount),
+        status="success",
+        provider="demo",
+        qr_string="demo-qr-string",
+        transaction_id=demo_transaction_id,
+        paid_at=datetime.utcnow(),
+        expires_at=datetime.utcnow() + timedelta(minutes=15),
+    )
+    db.add(payment)
+    await db.commit()
+
+    return {
+        "QrString": "demo-qr-string",
+        "TransactionId": demo_transaction_id,
+        "ReferenceId": f"DEMO-{datetime.today().strftime('%Y%m%d%H%M%S')}",
+        "SessionId": str(session.id),
+        "Status": "success",
+    }

@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List
+from typing import List, Optional
 from database import get_db
 from utils.dependencies import get_current_admin
 from schemas.booth import (
@@ -11,8 +11,10 @@ from schemas.booth import (
     BoothConfigUpdate,
 )
 from schemas.auth import TokenVerifyResponse
+from schemas.transaction import TransactionResponse
 from services.booth_service import BoothService
 from services.auth_service import AuthService
+from services.transaction_service import TransactionService
 
 router = APIRouter(prefix="/api/admin", tags=["Admin"])
 
@@ -257,3 +259,19 @@ async def verify_token(admin: dict = Depends(get_current_admin)):
         "username": admin.get("username"),
         "role": admin.get("role"),
     }
+
+
+@router.get("/transactions", response_model=List[TransactionResponse])
+async def get_transactions(
+    booth_id: Optional[str] = Query(None),
+    status: Optional[str] = Query(None),
+    start_date: Optional[str] = Query(None),
+    end_date: Optional[str] = Query(None),
+    admin: dict = Depends(get_current_admin),
+    db: AsyncSession = Depends(get_db),
+):
+    """Get all transactions with optional filters (admin only)."""
+    transactions = await TransactionService.get_transactions(
+        db, booth_id=booth_id, status=status, start_date=start_date, end_date=end_date
+    )
+    return transactions

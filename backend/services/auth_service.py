@@ -172,6 +172,9 @@ class AuthService:
         if not booth:
             return {"device_id": device_id, "booth": None, "is_assigned": False}
 
+        # Create new JWT with booth_id
+        new_jwt_token = create_device_jwt(device_id=device_id, booth_id=str(booth.id))
+
         return {
             "device_id": device_id,
             "booth": {
@@ -182,4 +185,5 @@ class AuthService:
                 "is_active": booth.is_active,
             },
             "is_assigned": True,
+            "device_token": new_jwt_token,  # Return new JWT with booth_id
         }
