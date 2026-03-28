@@ -57,10 +57,6 @@ function confirmFinish() {
   store.resetSession()
   router.push('/')
 }
-
-function handleBack() {
-  router.push('/photo-session')
-}
 </script>
 
 <template>
@@ -172,13 +168,7 @@ function handleBack() {
     </main>
     
     <footer class="flex-none bg-white/60 backdrop-blur-xl px-12 py-6 flex justify-between items-center border-t border-surface-container">
-      <button 
-        class="flex items-center gap-3 text-on-surface bg-surface-container-lowest border border-surface-container rounded-full px-8 py-3 shadow-sm hover:bg-surface-container transition-all active:scale-95"
-        @click="handleBack"
-      >
-        <span class="material-symbols-outlined text-primary">arrow_back_ios</span>
-        <span class="font-headline font-bold uppercase tracking-widest text-sm">Back</span>
-      </button>
+      <div class="w-[120px] invisible" />
       
       <div class="flex flex-col items-center">
         <p class="text-on-surface-variant text-[10px] font-bold uppercase tracking-[0.2em] mb-1">
