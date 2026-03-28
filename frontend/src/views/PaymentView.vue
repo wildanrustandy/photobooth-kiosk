@@ -15,7 +15,8 @@ const {
   formattedCountdown,
   stopPolling,
   simulatePaymentSuccess,
-  qrString
+  qrString,
+  referenceId
 } = usePayment()
 
 const qrCodeUrl = ref<string | null>(null)
@@ -131,6 +132,12 @@ function handleSimulatePayment() {
                     {{ store.formattedTotalPrice }}
                   </span>
                 </div>
+                <div v-if="referenceId" class="mt-4 pt-4 border-t border-outline-variant/20">
+                  <div class="flex justify-between items-center">
+                    <span class="text-on-surface-variant font-medium font-body text-sm">Ref ID</span>
+                    <span class="text-sm font-bold text-primary font-mono tracking-wide">{{ referenceId }}</span>
+                  </div>
+                </div>
               </div>
             </div>
             
@@ -163,14 +170,17 @@ function handleSimulatePayment() {
                 <div class="absolute bottom-4 right-4 w-12 h-12 border-b-4 border-r-4 border-primary rounded-br-lg" />
               </div>
               
-              <div class="mt-4 mb-2 flex items-center gap-4 flex-none">
-                <span class="font-headline font-extrabold text-on-surface-variant tracking-widest text-sm uppercase">
-                  QRIS
-                </span>
-                <div class="h-6 w-px bg-outline-variant" />
-                <span class="font-headline font-extrabold text-on-surface-variant tracking-widest text-sm uppercase">
-                  GPN
-                </span>
+              <div class="mt-4 mb-2 flex flex-col items-center gap-2 flex-none">
+                <div class="flex items-center gap-4">
+                  <span class="font-headline font-extrabold text-on-surface-variant tracking-widest text-sm uppercase">
+                    QRIS
+                  </span>
+                  <div class="h-6 w-px bg-outline-variant" />
+                  <span class="font-headline font-extrabold text-on-surface-variant tracking-widest text-sm uppercase">
+                    GPN
+                  </span>
+                </div>
+
               </div>
             </div>
           </div>

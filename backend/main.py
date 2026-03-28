@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 import hashlib
 import hmac
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -35,7 +35,8 @@ def create_payment(req: PaymentRequest):
         "phone": "08123456789",
         "email": "user@kiosk.com",
         "amount": req.amount,
-        "notifyUrl": "http://localhost:8000/api/payment/notify",
+        # "notifyUrl": "http://localhost:8000/api/payment/notify",
+        "notifyUrl": "https://fd85-2404-8000-100c-385-99a8-78ad-1c67-f998.ngrok-free.app/",
         "comments": "Photobooth Payment",
         "referenceId": "PB" + datetime.today().strftime("%Y%m%d%H%M%S"),
         "paymentMethod": "qris",
@@ -97,3 +98,39 @@ def check_status(transaction_id: str):
     if data.get("Status") == 200:
         return data.get("Data")
     raise HTTPException(status_code=400, detail=data)
+
+
+@app.get("/api/payment/notify")
+async def test_payment_notify_get(
+    trx_id: str = "TEST_TRX_123", status: str = "berhasil"
+):
+    """
+    Endpoint GET khusus untuk testing lokal via browser.
+    Contoh: http://localhost:8000/api/payment/notify?trx_id=12345&status=berhasil
+    """
+    return {
+        "message": "Local test successful. Webhook endpoint is active.",
+        "simulated_data": {"trx_id": trx_id, "status": status},
+    }
+
+
+@app.post("/api/payment/notify")
+async def payment_notify(request: Request):
+    # Baca raw body
+    raw_body = await request.body()
+    body_str = raw_body.decode("utf-8")
+
+    data = {}
+
+    # Parse form data (key=value&key2=value2 format)
+    if body_str:
+        pairs = body_str.split("&")
+        for pair in pairs:
+            if "=" in pair:
+                key, value = pair.split("=", 1)
+                data[key] = value
+
+    status = data.get("status", "UNKNOWN")
+    trx_id = data.get("trx_id", data.get("transaction_id", "UNKNOWN"))
+
+    return {"status": "success", "trx_id": trx_id, "received_data": data}

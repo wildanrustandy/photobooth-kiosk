@@ -12,6 +12,7 @@ export function usePayment() {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const qrString = ref<string | null>(null)
+  const referenceId = ref<string | null>(null)
   const expiresAt = ref<Date | null>(null)
 
   async function createPayment() {
@@ -38,8 +39,11 @@ export function usePayment() {
       if (!response.ok) throw new Error('Failed to create payment')
 
       const data = await response.json()
-      // iPaymu returns QrString in the Data object
+      console.log('[DEBUG] iPaymu response:', data)
+      // iPaymu returns QrString, TransactionId, and ReferenceId in the Data object
       qrString.value = data.QrString
+      referenceId.value = data.ReferenceId
+      console.log('[DEBUG] ReferenceId:', data.ReferenceId)
       store.setPaymentId(data.TransactionId)
       store.setPaymentStatus('pending')
       
@@ -49,6 +53,7 @@ export function usePayment() {
       console.error(err)
       error.value = 'Failed to load QRIS'
       qrString.value = 'demo-qr-string'
+      referenceId.value = `DEMO-${Date.now()}`
       store.setPaymentId(`demo-payment-${Date.now()}`)
       store.setPaymentStatus('pending')
       
@@ -143,6 +148,7 @@ export function usePayment() {
     isLoading,
     error,
     qrString,
+    referenceId,
     expiresAt,
     countdown,
     formattedCountdown,
