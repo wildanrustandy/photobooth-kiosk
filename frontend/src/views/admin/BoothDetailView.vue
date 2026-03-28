@@ -33,7 +33,8 @@ const configForm = ref({
   price_per_print: 35000,
   timer_default: 5,
   max_print: 10,
-  filters: ['Normal', 'Grayscale', 'Sepia']
+  filters: ['Normal', 'Grayscale', 'Sepia'],
+  payment_timeout: 5
 })
 
 const deviceIdInput = ref('')
@@ -60,6 +61,7 @@ const hasConfigChanges = computed(() => {
     configForm.value.price_per_print !== booth.value.config.price_per_print ||
     configForm.value.timer_default !== booth.value.config.timer_default ||
     configForm.value.max_print !== booth.value.config.max_print ||
+    configForm.value.payment_timeout !== booth.value.config.payment_timeout ||
     JSON.stringify(configForm.value.filters) !== JSON.stringify(booth.value.config.filters)
   )
 })
@@ -328,6 +330,22 @@ function logout() {
                   />
                 </div>
               </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Payment Timeout (min)</label>
+                  <div class="relative">
+                    <select
+                      v-model.number="configForm.payment_timeout"
+                      class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none appearance-none"
+                    >
+                      <option :value="3">3 Menit</option>
+                      <option :value="5">5 Menit</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant mt-2">QRIS Payment Time Limit</p>
+                </div>
+              </div>
               <div>
                 <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-3">Available Filters</label>
                 <div class="flex flex-wrap gap-2">
@@ -347,7 +365,7 @@ function logout() {
               <span class="text-sm text-on-surface-variant">Changes apply to new sessions immediately</span>
               <div class="flex items-center gap-4">
                 <button
-                  @click="configForm = booth?.config ? { ...booth.config } : { price_per_print: 35000, timer_default: 5, max_print: 10, filters: ['Normal'] }"
+                  @click="configForm = booth?.config ? { ...booth.config } : { price_per_print: 35000, timer_default: 5, max_print: 10, filters: ['Normal'], payment_timeout: 5 }"
                   class="px-6 py-2.5 rounded-xl text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors"
                 >
                   Reset

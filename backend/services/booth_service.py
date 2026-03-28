@@ -29,6 +29,7 @@ class BoothService:
             "timer_default": 5,
             "max_print": 10,
             "filters": ["normal", "grayscale", "sepia", "vintage", "bright"],
+            "payment_timeout": 5,
         }
 
         booth = Booth(
@@ -86,6 +87,8 @@ class BoothService:
             current_config["max_print"] = config_data.max_print
         if config_data.filters is not None:
             current_config["filters"] = config_data.filters
+        if config_data.payment_timeout is not None:
+            current_config["payment_timeout"] = config_data.payment_timeout
 
         booth.config = current_config
         booth.updated_at = datetime.utcnow()

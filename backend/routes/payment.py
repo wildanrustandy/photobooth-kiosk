@@ -108,8 +108,11 @@ async def create_payment(
             amount=float(request.amount),
             status="pending",
             provider="qris",
+            reference_id=reference_id,  # Our own reference
             qr_string=payment_data.get("QrString"),
-            transaction_id=payment_data.get("TransactionId"),
+            transaction_id=str(
+                payment_data.get("TransactionId")
+            ),  # iPaymu Transaction ID
             expires_at=datetime.utcnow() + timedelta(minutes=15),
         )
         db.add(payment)
@@ -117,7 +120,9 @@ async def create_payment(
 
         return {
             "QrString": payment_data.get("QrString"),
-            "TransactionId": payment_data.get("TransactionId"),
+            "TransactionId": str(
+                payment_data.get("TransactionId")
+            ),  # Convert to string
             "ReferenceId": reference_id,
             "SessionId": str(session.id),
         }
@@ -264,6 +269,9 @@ async def create_demo_payment(
     db.add(session)
     await db.flush()
 
+    # Generate reference ID
+    reference_id = "PB" + datetime.today().strftime("%Y%m%d%H%M%S")
+
     # Create payment record with success status
     demo_transaction_id = f"DEMO-{uuid.uuid4().hex[:12].upper()}"
     payment = Payment(
@@ -272,6 +280,7 @@ async def create_demo_payment(
         amount=float(request.amount),
         status="success",
         provider="demo",
+        reference_id=reference_id,
         qr_string="demo-qr-string",
         transaction_id=demo_transaction_id,
         paid_at=datetime.utcnow(),
@@ -283,7 +292,7 @@ async def create_demo_payment(
     return {
         "QrString": "demo-qr-string",
         "TransactionId": demo_transaction_id,
-        "ReferenceId": f"DEMO-{datetime.today().strftime('%Y%m%d%H%M%S')}",
+        "ReferenceId": reference_id,
         "SessionId": str(session.id),
         "Status": "success",
     }

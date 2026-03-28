@@ -64,7 +64,8 @@ class TransactionService:
                 {
                     "id": str(payment.id),
                     "session_id": str(payment.session_id),
-                    "reference_id": payment.transaction_id,
+                    "reference_id": payment.reference_id,
+                    "transaction_id": payment.transaction_id,
                     "booth_id": str(payment.booth_id),
                     "booth_name": booth.name if booth else "Unknown",
                     "amount": float(payment.amount),
@@ -101,7 +102,8 @@ class TransactionService:
         return {
             "id": str(payment.id),
             "session_id": str(payment.session_id),
-            "reference_id": payment.transaction_id,
+            "reference_id": payment.reference_id,
+            "transaction_id": payment.transaction_id,
             "booth_id": str(payment.booth_id),
             "booth_name": booth.name if booth else "Unknown",
             "amount": float(payment.amount),

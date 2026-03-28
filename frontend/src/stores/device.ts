@@ -6,6 +6,7 @@ export interface BoothConfig {
   timer_default: number
   max_print: number
   filters: string[]
+  payment_timeout: number  // Payment timeout in minutes (3 or 5)
 }
 
 export interface Booth {

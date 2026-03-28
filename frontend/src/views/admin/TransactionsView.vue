@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAdminStore } from '@/stores/admin'
 import { useAdminApi } from '@/composables/useAdminApi'
@@ -17,9 +17,42 @@ const boothFilter = ref('all')
 const currentPage = ref(1)
 const itemsPerPage = 10
 
+// Auto-refresh
+const autoRefresh = ref(true)
+const refreshInterval = ref<number | null>(null)
+const REFRESH_INTERVAL_MS = 5000 // 5 seconds
+
 onMounted(() => {
   loadTransactions()
+  startAutoRefresh()
 })
+
+onUnmounted(() => {
+  stopAutoRefresh()
+})
+
+function startAutoRefresh() {
+  if (autoRefresh.value && !refreshInterval.value) {
+    refreshInterval.value = window.setInterval(() => {
+      loadTransactions()
+    }, REFRESH_INTERVAL_MS)
+  }
+}
+
+function stopAutoRefresh() {
+  if (refreshInterval.value) {
+    clearInterval(refreshInterval.value)
+    refreshInterval.value = null
+  }
+}
+
+function toggleAutoRefresh() {
+  if (autoRefresh.value) {
+    startAutoRefresh()
+  } else {
+    stopAutoRefresh()
+  }
+}
 
 async function loadTransactions() {
   const params: any = {}
@@ -237,12 +270,22 @@ function logout() {
               <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
             </div>
           </div>
-          <div class="self-end pb-0.5">
+          <div class="self-end pb-0.5 flex items-center gap-3">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                v-model="autoRefresh"
+                @change="toggleAutoRefresh"
+                class="peer appearance-none w-4 h-4 rounded border-2 border-outline-variant checked:bg-primary checked:border-primary transition-all cursor-pointer"
+              />
+              <span class="text-xs text-on-surface-variant">Auto-refresh</span>
+            </label>
             <button
               @click="loadTransactions"
-              class="bg-primary text-white h-[46px] px-6 rounded-xl font-bold flex items-center gap-2 hover:bg-primary-dim transition-colors shadow-lg shadow-primary/10"
+              :disabled="isLoading"
+              class="bg-primary text-white h-[46px] px-6 rounded-xl font-bold flex items-center gap-2 hover:bg-primary-dim transition-colors shadow-lg shadow-primary/10 disabled:opacity-50"
             >
-              <span class="material-symbols-outlined text-sm">refresh</span>
+              <span class="material-symbols-outlined text-sm" :class="{ 'animate-spin': isLoading }">refresh</span>
               Refresh
             </button>
           </div>
@@ -292,8 +335,9 @@ function logout() {
               <table class="w-full text-left border-collapse">
                 <thead>
                   <tr class="bg-surface-container-low/50">
-                    <th class="px-6 py-4 text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest">ID Sesi</th>
+                    <th class="px-6 py-4 text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest">Kiosk</th>
                     <th class="px-6 py-4 text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest">Reference</th>
+                    <th class="px-6 py-4 text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest">iPaymu ID</th>
                     <th class="px-6 py-4 text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest">Waktu</th>
                     <th class="px-6 py-4 text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest">Cetak</th>
                     <th class="px-6 py-4 text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest">Total</th>
@@ -307,9 +351,12 @@ function logout() {
                     class="hover:bg-surface-container-low/30 transition-colors"
                   >
                     <td class="px-6 py-5">
-                      <span class="text-primary font-bold font-mono">{{ transaction.session_id }}</span>
+                      <span class="font-bold text-on-surface">{{ transaction.booth_name }}</span>
                     </td>
-                    <td class="px-6 py-5 text-sm font-medium text-on-surface-variant font-mono">{{ transaction.reference_id }}</td>
+                    <td class="px-6 py-5">
+                      <span class="text-primary font-bold font-mono text-sm">{{ transaction.reference_id || '-' }}</span>
+                    </td>
+                    <td class="px-6 py-5 text-sm font-medium text-on-surface-variant font-mono">{{ transaction.transaction_id || '-' }}</td>
                     <td class="px-6 py-5 text-sm text-on-surface-variant">{{ formatDate(transaction.created_at) }}</td>
                     <td class="px-6 py-5 text-sm font-semibold">{{ transaction.print_count }}</td>
                     <td class="px-6 py-5 text-sm font-bold">Rp {{ formatCurrency(transaction.amount) }}</td>

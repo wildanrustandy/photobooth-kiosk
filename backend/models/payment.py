@@ -22,8 +22,9 @@ class Payment(Base):
     amount = Column(Numeric(10, 2), nullable=False)
     status = Column(String(20), default="pending")  # pending, success, failed, expired
     provider = Column(String(50), default="qris")
+    reference_id = Column(String(100), nullable=True)  # Our own reference ID
     qr_string = Column(Text, nullable=True)
-    transaction_id = Column(String(255), nullable=True)
+    transaction_id = Column(String(255), nullable=True)  # iPaymu Transaction ID
     paid_at = Column(DateTime, nullable=True)
     expires_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)

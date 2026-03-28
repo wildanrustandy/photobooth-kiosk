@@ -6,7 +6,8 @@ from datetime import datetime
 class TransactionResponse(BaseModel):
     id: str
     session_id: str
-    reference_id: Optional[str] = None
+    reference_id: Optional[str] = None  # Our own reference
+    transaction_id: Optional[str] = None  # iPaymu Transaction ID
     booth_id: str
     booth_name: str
     amount: float

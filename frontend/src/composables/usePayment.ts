@@ -4,7 +4,10 @@ import { useDeviceStore } from '@/stores/device'
 
 const API_BASE = 'http://localhost:8000/api/payment'
 
-const countdown = ref<number>(300)
+// Default payment timeout in seconds (5 minutes)
+const DEFAULT_PAYMENT_TIMEOUT = 300
+
+const countdown = ref<number>(DEFAULT_PAYMENT_TIMEOUT)
 let pollInterval: number | null = null
 let countdownInterval: number | null = null
 
@@ -16,10 +19,18 @@ export function usePayment() {
   const qrString = ref<string | null>(null)
   const referenceId = ref<string | null>(null)
   const expiresAt = ref<Date | null>(null)
+  const isDemoMode = ref(false)
+
+  // Get payment timeout from booth config (in minutes), convert to seconds
+  const paymentTimeoutSeconds = computed(() => {
+    const timeoutMinutes = deviceStore.booth?.config?.payment_timeout || 5
+    return timeoutMinutes * 60
+  })
 
   async function createPayment() {
     isLoading.value = true
     error.value = null
+    isDemoMode.value = false
 
     try {
       if (!store.sessionId) {
@@ -42,17 +53,29 @@ export function usePayment() {
         headers['Authorization'] = `Bearer ${deviceStore.device_token}`
       }
 
+      console.log('[DEBUG] Creating payment with payload:', payload)
+
       const response = await fetch(`${API_BASE}/create`, {
         method: 'POST',
         headers,
         body: JSON.stringify(payload)
       })
 
-      if (!response.ok) throw new Error('Failed to create payment')
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('[ERROR] Payment creation failed:', response.status, errorData)
+        throw new Error(errorData.detail || `Failed to create payment: ${response.status}`)
+      }
 
       const data = await response.json()
       console.log('[DEBUG] iPaymu response:', data)
-      // iPaymu returns QrString, TransactionId, and ReferenceId in the Data object
+
+      // iPaymu returns QrString, TransactionId, and ReferenceId
+      if (!data.QrString) {
+        console.error('[ERROR] No QrString in response:', data)
+        throw new Error('No QR code received from payment provider')
+      }
+
       qrString.value = data.QrString
       referenceId.value = data.ReferenceId
       console.log('[DEBUG] ReferenceId:', data.ReferenceId)
@@ -62,8 +85,9 @@ export function usePayment() {
       startCountdown()
       startPolling()
     } catch (err) {
-      console.error(err)
-      error.value = 'Failed to load QRIS'
+      console.error('[ERROR] createPayment error:', err)
+      error.value = err instanceof Error ? err.message : 'Failed to load QRIS'
+      isDemoMode.value = true
       qrString.value = 'demo-qr-string'
       referenceId.value = `DEMO-${Date.now()}`
       store.setPaymentId(`demo-payment-${Date.now()}`)
@@ -79,7 +103,8 @@ export function usePayment() {
   function startCountdown() {
     if (countdownInterval) return
 
-    countdown.value = 300
+    // Use payment timeout from booth config (default 5 minutes)
+    countdown.value = paymentTimeoutSeconds.value
     countdownInterval = window.setInterval(() => {
       countdown.value--
 
@@ -213,6 +238,7 @@ export function usePayment() {
     expiresAt,
     countdown,
     formattedCountdown,
+    isDemoMode,
     createPayment,
     checkPaymentStatus,
     startPolling,

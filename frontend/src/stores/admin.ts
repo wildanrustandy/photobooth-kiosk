@@ -28,12 +28,14 @@ export interface BoothConfig {
   timer_default: number
   max_print: number
   filters: string[]
+  payment_timeout: number  // Payment timeout in minutes (3 or 5)
 }
 
 export interface Transaction {
   id: string
   session_id: string
-  reference_id: string
+  reference_id: string | null
+  transaction_id: string | null
   booth_id: string
   booth_name: string
   amount: number
@@ -41,7 +43,7 @@ export interface Transaction {
   status: 'success' | 'pending' | 'failed'
   payment_method: string
   created_at: string
-  updated_at: string
+  updated_at: string | null
 }
 
 export const useAdminStore = defineStore('admin', () => {

@@ -17,7 +17,10 @@ const {
   stopPolling,
   simulatePaymentSuccess,
   qrString,
-  referenceId
+  referenceId,
+  isLoading,
+  error,
+  isDemoMode
 } = usePayment()
 
 const qrCodeUrl = ref<string | null>(null)
@@ -167,15 +170,36 @@ function handleSimulatePayment() {
           <div class="bg-white p-2 rounded-xl shadow-lg relative overflow-hidden flex flex-col h-full max-h-[35vh] aspect-square">
             <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
 
-            <div class="relative bg-white border-8 border-white rounded-[1.5rem] flex flex-col items-center flex-1 justify-center min-h-0">
-              <div class="w-full h-full flex items-center justify-center relative p-4 bg-surface-container-low/30 rounded-lg">
-                <div class="relative w-full h-full bg-white rounded-lg p-4 shadow-inner flex items-center justify-center">
-                  <img v-if="qrCodeUrl" :src="qrCodeUrl" alt="QRIS Code" class="w-full h-full object-contain" />
-                  <div v-else class="w-full h-full bg-surface-container animate-pulse rounded-lg flex items-center justify-center">
-                    <span class="material-symbols-outlined text-primary text-6xl">qr_code_2</span>
+<div class="relative bg-white border-8 border-white rounded-[1.5rem] flex flex-col items-center flex-1 justify-center min-h-0">
+                <div class="w-full h-full flex items-center justify-center relative p-4 bg-surface-container-low/30 rounded-lg">
+                  <div class="relative w-full h-full bg-white rounded-lg p-4 shadow-inner flex items-center justify-center">
+                    <!-- Loading State -->
+                    <div v-if="isLoading" class="w-full h-full bg-surface-container rounded-lg flex flex-col items-center justify-center gap-3">
+                      <div class="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+                      <span class="text-sm text-on-surface-variant font-medium">Memuat QRIS...</span>
+                    </div>
+                    <!-- Error State -->
+                    <div v-else-if="error && !qrCodeUrl" class="w-full h-full bg-error-container/10 rounded-lg flex flex-col items-center justify-center gap-3 p-4">
+                      <span class="material-symbols-outlined text-error text-5xl">error</span>
+                      <span class="text-sm text-error font-medium text-center">{{ error }}</span>
+                      <button @click="createPayment" class="mt-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dim transition-colors">
+                        Coba Lagi
+                      </button>
+                    </div>
+                    <!-- Demo Mode Indicator -->
+                    <div v-else-if="isDemoMode && !qrCodeUrl" class="w-full h-full bg-tertiary-container/20 rounded-lg flex flex-col items-center justify-center gap-3 p-4">
+                      <span class="material-symbols-outlined text-tertiary text-5xl">qr_code_2</span>
+                      <span class="text-sm text-tertiary font-medium text-center">Mode Demo</span>
+                      <span class="text-xs text-on-surface-variant text-center">QRIS tidak tersedia di mode demo</span>
+                    </div>
+                    <!-- QR Code -->
+                    <img v-else-if="qrCodeUrl" :src="qrCodeUrl" alt="QRIS Code" class="w-full h-full object-contain" />
+                    <!-- Fallback Loading -->
+                    <div v-else class="w-full h-full bg-surface-container animate-pulse rounded-lg flex items-center justify-center">
+                      <span class="material-symbols-outlined text-primary text-6xl">qr_code_2</span>
+                    </div>
+                    <div v-if="qrCodeUrl" class="absolute top-0 left-0 w-full h-1 bg-primary/40 shadow-[0_0_15px_rgba(167,41,90,0.5)] rounded-full" />
                   </div>
-                  <div class="absolute top-0 left-0 w-full h-1 bg-primary/40 shadow-[0_0_15px_rgba(167,41,90,0.5)] rounded-full" />
-                </div>
 
                 <div class="absolute top-4 left-4 w-12 h-12 border-t-4 border-l-4 border-primary rounded-tl-lg" />
                 <div class="absolute top-4 right-4 w-12 h-12 border-t-4 border-r-4 border-primary rounded-tr-lg" />

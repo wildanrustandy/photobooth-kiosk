@@ -20,6 +20,7 @@ class BoothConfigUpdate(BaseModel):
     timer_default: Optional[int] = None
     max_print: Optional[int] = None
     filters: Optional[list] = None
+    payment_timeout: Optional[int] = None  # Payment timeout in minutes (3 or 5)
 
 
 class BoothAssignDevice(BaseModel):

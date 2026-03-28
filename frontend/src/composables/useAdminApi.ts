@@ -30,6 +30,7 @@ export interface UpdateBoothConfigData {
   timer_default?: number
   max_print?: number
   filters?: string[]
+  payment_timeout?: number
 }
 
 export function useAdminApi() {
