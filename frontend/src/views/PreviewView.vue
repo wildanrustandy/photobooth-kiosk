@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSessionStore } from '@/stores/session'
 import { usePrinter } from '@/composables/usePrinter'
@@ -11,6 +11,30 @@ const { isPrinting, print } = usePrinter()
 
 const showConfirmModal = ref(false)
 const showDownloadQR = ref(false)
+
+const autoCloseTime = ref(180)
+let timerInterval: ReturnType<typeof setInterval> | null = null
+
+const formattedAutoCloseTime = computed(() => {
+  const m = Math.floor(autoCloseTime.value / 60)
+  const s = autoCloseTime.value % 60
+  return `${m}:${s.toString().padStart(2, '0')}`
+})
+
+onMounted(() => {
+  timerInterval = setInterval(() => {
+    if (autoCloseTime.value > 0) {
+      autoCloseTime.value--
+    } else {
+      if (timerInterval) clearInterval(timerInterval)
+      confirmFinish()
+    }
+  }, 1000)
+})
+
+onUnmounted(() => {
+  if (timerInterval) clearInterval(timerInterval)
+})
 
 const sortedPhotos = computed(() => {
   return [...store.photos].sort((a, b) => a.order - b.order)
@@ -158,7 +182,7 @@ function handleBack() {
       
       <div class="flex flex-col items-center">
         <p class="text-on-surface-variant text-[10px] font-bold uppercase tracking-[0.2em] mb-1">
-          Ready for the next person?
+          Otomatis selesai dalam <span class="text-error">{{ formattedAutoCloseTime }}</span>
         </p>
         <button 
           class="flex items-center gap-3 bg-gradient-to-r from-primary to-primary-container text-white rounded-full px-16 py-4 shadow-xl hover:brightness-105 active:scale-95 transition-all"

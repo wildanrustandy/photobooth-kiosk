@@ -17,6 +17,7 @@ const showCountdown = ref(false)
 const countdownValue = ref(0)
 const shutterSound = ref<HTMLAudioElement | null>(null)
 const showRetakeModal = ref(false)
+const showRetakeAllModal = ref(false)
 const retakePhotoIndex = ref<number | null>(null)
 
 const filters = [
@@ -100,6 +101,11 @@ async function retakePhoto(order: number) {
 }
 
 async function retakeAll() {
+  showRetakeAllModal.value = true
+}
+
+async function confirmRetakeAll() {
+  showRetakeAllModal.value = false
   store.clearPhotos()
   await startPhotoSession()
 }
@@ -124,21 +130,21 @@ function openRetakeModal(order: number) {
 </script>
 
 <template>
-  <div class="min-h-screen w-full bg-surface text-on-surface font-body overflow-x-hidden">
-    <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 py-4 bg-white/50 backdrop-blur-sm">
+  <div class="h-dvh w-dvw overflow-hidden flex flex-col bg-surface text-on-surface font-body">
+    <header class="flex-none flex justify-between items-center px-8 py-4 bg-white/50 backdrop-blur-sm">
       <div class="text-2xl font-black text-primary tracking-tighter font-headline">Photobooth</div>
       <span class="text-primary font-extrabold font-headline">Step 4/5</span>
     </header>
     
-    <main class="pt-24 pb-32 w-full flex flex-col items-center">
+    <main class="flex-1 min-h-0 w-full flex flex-col overflow-y-auto">
       <!-- Title -->
-      <h1 class="font-headline text-4xl font-black text-on-surface text-center mb-8">
+      <h1 class="font-headline text-4xl font-black text-on-surface text-center py-6">
         {{ store.allPhotosTaken ? 'Foto Selesai!' : 'Sesi Foto' }}
       </h1>
       
-      <div class="w-full max-w-5xl flex flex-col lg:flex-row gap-8 items-start px-6">
+      <div class="flex-1 min-h-0 w-full max-w-5xl mx-auto flex flex-col lg:flex-row gap-6 items-start px-6">
         <!-- Camera Preview -->
-        <div class="flex-1 w-full">
+        <div class="flex-1 min-h-0 w-full flex flex-col">
           <div class="aspect-[4/3] relative rounded-[2rem] overflow-hidden bg-surface-container shadow-xl border-4 border-white">
             <video 
               ref="videoRef"
@@ -235,7 +241,7 @@ function openRetakeModal(order: number) {
         </div>
         
         <!-- Photo Preview Grid -->
-        <div class="w-full lg:w-80 shrink-0">
+        <div class="w-full lg:w-80 shrink-0 min-h-0 flex flex-col">
           <div class="bg-surface-container-low rounded-2xl p-6 shadow-lg">
             <h3 class="font-headline font-bold text-on-surface mb-4 text-center">Preview</h3>
             
@@ -367,7 +373,29 @@ function openRetakeModal(order: number) {
       </div>
     </div>
     
-    <footer class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-10 pb-12 pt-6 bg-white/60 backdrop-blur-xl rounded-t-[3rem] shadow-[0_-20px_40px_rgba(36,48,54,0.06)]">
+    <!-- Retake All Modal -->
+    <div v-if="showRetakeAllModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div class="bg-surface-container-lowest rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+        <h3 class="font-headline font-bold text-xl text-on-surface mb-4">Retake Semua Foto?</h3>
+        <p class="text-on-surface-variant mb-6">Apakah Anda yakin ingin mengulang semua foto dari awal? Semua foto saat ini akan terhapus.</p>
+        <div class="flex gap-4">
+          <button 
+            class="flex-1 py-3 rounded-full border border-outline-variant text-on-surface font-bold hover:bg-surface-container transition-all"
+            @click="showRetakeAllModal = false"
+          >
+            Batal
+          </button>
+          <button 
+            class="flex-1 py-3 rounded-full bg-error text-white font-bold hover:brightness-110 transition-all"
+            @click="confirmRetakeAll"
+          >
+            Ya, Retake Semua
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <footer class="flex-none flex justify-around items-center px-10 pb-12 pt-6 bg-white/60 backdrop-blur-xl rounded-t-[3rem] shadow-[0_-20px_40px_rgba(36,48,54,0.06)]">
       <button 
         class="flex flex-col items-center justify-center text-on-surface bg-surface-container-lowest rounded-full px-10 py-4 shadow-sm hover:brightness-110 transition-all active:scale-90 duration-200 touch-none"
         @click="handleBack"

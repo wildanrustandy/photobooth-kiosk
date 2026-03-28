@@ -69,11 +69,35 @@
 }
 
 @layer base {
-  body {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html, body, #app {
     background-color: var(--color-background);
     font-family: var(--font-family-body);
     color: var(--color-on-surface);
     -webkit-tap-highlight-color: transparent;
+    margin: 0;
+    padding: 0;
+    height: 100dvh;
+    width: 100dvw;
+    max-height: 100dvh;
+    max-width: 100dvw;
+    min-height: 100dvh;
+    min-width: 100dvw;
+    overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+  }
+
+  html {
+    position: fixed;
+    inset: 0;
+  }
+
+  body {
+    position: relative;
   }
 
   h1, h2, h3, h4, h5, h6 {

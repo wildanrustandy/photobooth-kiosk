@@ -3,14 +3,20 @@ import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <RouterView />
+  <div class="app-container">
+    <RouterView />
+  </div>
 </template>
 
 <style>
-html, body, #app {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
+.app-container {
+  height: 100dvh;
+  width: 100dvw;
+  max-height: 100dvh;
+  max-width: 100dvw;
+  min-height: 100dvh;
+  min-width: 100dvw;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 </style>

@@ -44,8 +44,8 @@ function handleSimulatePayment() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-background text-on-surface overflow-x-hidden">
-    <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 py-6 bg-surface/80 backdrop-blur-sm">
+  <div class="h-dvh w-dvw overflow-hidden flex flex-col bg-background text-on-surface">
+    <header class="flex-none flex justify-between items-center px-8 py-6 bg-surface/80 backdrop-blur-sm">
       <div class="flex items-center gap-4">
         <span class="text-3xl font-black text-primary tracking-tighter font-headline">Photobooth</span>
       </div>
@@ -64,11 +64,11 @@ function handleSimulatePayment() {
       </div>
     </header>
     
-    <main class="pt-32 pb-40 px-6 max-w-4xl mx-auto flex flex-col items-center">
-      <ProgressIndicator :current-step="2" :total-steps="5" class="mb-10" />
+    <main class="flex-1 min-h-0 px-6 max-w-4xl mx-auto flex flex-col items-center overflow-hidden py-4 w-full">
+      <ProgressIndicator :current-step="2" :total-steps="5" class="mb-4 flex-none" />
       
-      <section class="w-full text-center mb-10">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-on-surface tracking-tight mb-4 font-headline">
+      <section class="w-full text-center mb-6 flex-none">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-on-surface tracking-tight mb-2 font-headline">
           Pembayaran QRIS
         </h1>
         <p class="text-on-surface-variant font-medium text-lg font-body">
@@ -76,7 +76,7 @@ function handleSimulatePayment() {
         </p>
       </section>
       
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 w-full">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 w-full flex-1 min-h-0">
         <div class="md:col-span-4 flex flex-col gap-6 order-2 md:order-1">
           <div class="bg-surface-container-low p-8 rounded-xl shadow-[0_20px_40px_rgba(36,48,54,0.06)] flex flex-col justify-between h-full">
             <div>
@@ -109,12 +109,12 @@ function handleSimulatePayment() {
           </div>
         </div>
         
-        <div class="md:col-span-8 order-1 md:order-2">
-          <div class="bg-white p-2 rounded-xl shadow-lg relative overflow-hidden group">
+        <div class="md:col-span-8 order-1 md:order-2 flex items-center justify-center min-h-0">
+          <div class="bg-white p-2 rounded-xl shadow-lg relative overflow-hidden flex flex-col h-full max-h-[35vh] aspect-square">
             <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
             
-            <div class="relative bg-white border-[1.5rem] border-white rounded-[2rem] flex flex-col items-center">
-              <div class="w-full aspect-square max-w-[400px] flex items-center justify-center relative p-8 bg-surface-container-low/30 rounded-lg">
+            <div class="relative bg-white border-8 border-white rounded-[1.5rem] flex flex-col items-center flex-1 justify-center min-h-0">
+              <div class="w-full h-full flex items-center justify-center relative p-4 bg-surface-container-low/30 rounded-lg">
                 <div class="relative w-full h-full bg-white rounded-lg p-4 shadow-inner flex items-center justify-center">
                   <div class="w-48 h-48 bg-surface-container animate-pulse rounded-lg flex items-center justify-center">
                     <span class="material-symbols-outlined text-primary text-6xl">qr_code_2</span>
@@ -128,7 +128,7 @@ function handleSimulatePayment() {
                 <div class="absolute bottom-4 right-4 w-12 h-12 border-b-4 border-r-4 border-primary rounded-br-lg" />
               </div>
               
-              <div class="mt-8 mb-4 flex items-center gap-4">
+              <div class="mt-4 mb-2 flex items-center gap-4 flex-none">
                 <span class="font-headline font-extrabold text-on-surface-variant tracking-widest text-sm uppercase">
                   QRIS
                 </span>
@@ -142,7 +142,7 @@ function handleSimulatePayment() {
         </div>
       </div>
       
-      <div class="mt-12 w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="mt-6 mb-4 w-full grid grid-cols-1 md:grid-cols-3 gap-6 flex-none">
         <div class="flex items-start gap-4 p-4">
           <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
             <span class="material-symbols-outlined text-primary font-bold">qr_code_scanner</span>
@@ -179,7 +179,7 @@ function handleSimulatePayment() {
       </div>
     </main>
     
-<footer class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-10 pb-12 pt-6 bg-white/60 backdrop-blur-xl shadow-[0_-20px_40px_rgba(36,48,54,0.06)] rounded-t-[3rem]">
+<footer class="flex-none flex justify-around items-center px-10 py-6 bg-white/60 backdrop-blur-xl shadow-[0_-20px_40px_rgba(36,48,54,0.06)] rounded-t-[3rem]">
       <!-- Demo Mode Button -->
       <button 
         v-if="isDemo && store.paymentStatus === 'pending'"
