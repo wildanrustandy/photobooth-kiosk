@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import QRCode from 'qrcode'
 import { useSessionStore } from '@/stores/session'
 import { usePayment } from '@/composables/usePayment'
 import ProgressIndicator from '@/components/ProgressIndicator.vue'
@@ -13,8 +14,23 @@ const {
   countdown,
   formattedCountdown,
   stopPolling,
-  simulatePaymentSuccess
+  simulatePaymentSuccess,
+  qrString
 } = usePayment()
+
+const qrCodeUrl = ref<string | null>(null)
+
+watch(qrString, async (newVal) => {
+  if (newVal && newVal !== 'demo-qr-string') {
+    try {
+      qrCodeUrl.value = await QRCode.toDataURL(newVal, { width: 400, margin: 1 })
+    } catch (e) {
+      console.error('Failed to generate QR code', e)
+    }
+  } else {
+    qrCodeUrl.value = null
+  }
+})
 
 const isDemo = import.meta.env.DEV || !import.meta.env.VITE_API_BASE
 
@@ -116,7 +132,8 @@ function handleSimulatePayment() {
             <div class="relative bg-white border-8 border-white rounded-[1.5rem] flex flex-col items-center flex-1 justify-center min-h-0">
               <div class="w-full h-full flex items-center justify-center relative p-4 bg-surface-container-low/30 rounded-lg">
                 <div class="relative w-full h-full bg-white rounded-lg p-4 shadow-inner flex items-center justify-center">
-                  <div class="w-48 h-48 bg-surface-container animate-pulse rounded-lg flex items-center justify-center">
+                  <img v-if="qrCodeUrl" :src="qrCodeUrl" alt="QRIS Code" class="w-full h-full object-contain" />
+                  <div v-else class="w-full h-full bg-surface-container animate-pulse rounded-lg flex items-center justify-center">
                     <span class="material-symbols-outlined text-primary text-6xl">qr_code_2</span>
                   </div>
                   <div class="absolute top-0 left-0 w-full h-1 bg-primary/40 shadow-[0_0_15px_rgba(167,41,90,0.5)] rounded-full" />

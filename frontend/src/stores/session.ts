@@ -12,9 +12,15 @@ export interface Photo {
 }
 
 export const useSessionStore = defineStore('session', () => {
+  // Constants - defined first
+  const PRICE_PER_SHEET = 35000
+  const MIN_PRINT_COUNT = 1
+  const MAX_PRINT_COUNT = 10
+
+  // State
   const sessionId = ref<string | null>(null)
   const printCount = ref<number>(1)
-  const totalPrice = ref<number>(0)
+  const totalPrice = ref<number>(PRICE_PER_SHEET)  // Initialize with default price (1 sheet)
   const paymentStatus = ref<PaymentStatus>('idle')
   const sessionStatus = ref<SessionStatus>('idle')
   const photos = ref<Photo[]>([])
@@ -23,10 +29,6 @@ export const useSessionStore = defineStore('session', () => {
   const currentStep = ref<number>(0)
   const paymentId = ref<string | null>(null)
   const downloadToken = ref<string | null>(null)
-
-  const PRICE_PER_SHEET = 35000
-  const MIN_PRINT_COUNT = 1
-  const MAX_PRINT_COUNT = 10
 
   const formattedTotalPrice = computed(() => {
     return new Intl.NumberFormat('id-ID', {

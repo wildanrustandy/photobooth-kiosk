@@ -1,7 +1,7 @@
 import { ref, computed, onUnmounted } from 'vue'
 import { useSessionStore } from '@/stores/session'
 
-const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+const API_BASE = 'http://localhost:8000/api/payment'
 
 const countdown = ref<number>(300)
 let pollInterval: number | null = null
@@ -20,31 +20,42 @@ export function usePayment() {
 
     try {
       if (!store.sessionId) {
-        store.setSessionId(`demo-session-${Date.now()}`)
+        store.setSessionId(`session-${Date.now()}`)
       }
 
-      const response = await fetch(`${API_BASE}/payments/create`, {
+      const payload = {
+        amount: store.totalPrice.toString(),
+        product_name: 'Photobooth Standard',
+        qty: store.printCount.toString()
+      }
+
+      const response = await fetch(`${API_BASE}/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ session_id: store.sessionId })
+        body: JSON.stringify(payload)
       })
 
       if (!response.ok) throw new Error('Failed to create payment')
 
       const data = await response.json()
-      qrString.value = data.qr_string
-      expiresAt.value = new Date(data.expires_at)
-      store.setPaymentId(data.payment_id)
+      // iPaymu returns QrString in the Data object
+      qrString.value = data.QrString
+      store.setPaymentId(data.TransactionId)
       store.setPaymentStatus('pending')
+      
+      startCountdown()
+      startPolling()
     } catch (err) {
+      console.error(err)
+      error.value = 'Failed to load QRIS'
       qrString.value = 'demo-qr-string'
       store.setPaymentId(`demo-payment-${Date.now()}`)
       store.setPaymentStatus('pending')
-      console.log('Demo mode: Payment simulation enabled')
-    } finally {
-      isLoading.value = false
+      
       startCountdown()
       startPolling()
+    } finally {
+      isLoading.value = false
     }
   }
 
@@ -71,26 +82,28 @@ export function usePayment() {
   }
 
   async function checkPaymentStatus() {
-    if (!store.paymentId) return
+    if (!store.paymentId || String(store.paymentId).startsWith('demo')) return
 
     try {
-      const response = await fetch(`${API_BASE}/payments/${store.paymentId}/status`)
+      const response = await fetch(`${API_BASE}/status/${store.paymentId}`)
       
       if (!response.ok) throw new Error('Failed to check status')
 
       const data = await response.json()
       
-      if (data.status === 'success') {
+      // iPaymu Status -> 1=Berhasil, 6=Settlement
+      if (data.Status === 1 || data.Status === 6) {
         store.setPaymentStatus('success')
         stopPolling()
         stopCountdown()
-      } else if (data.status === 'failed') {
+      } else if (data.Status === -2 || data.Status === 2) {
+        // Expired or Failed
         store.setPaymentStatus('failed')
         stopPolling()
         stopCountdown()
       }
     } catch {
-      console.log('Demo mode: Payment status check skipped')
+      console.log('Payment status check skipped or failed')
     }
   }
 
@@ -99,7 +112,7 @@ export function usePayment() {
     
     pollInterval = window.setInterval(() => {
       checkPaymentStatus()
-    }, 2000)
+    }, 3000) // Poll every 3 seconds for iPaymu
   }
 
   function stopPolling() {
