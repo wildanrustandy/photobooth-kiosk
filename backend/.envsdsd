@@ -1,0 +1,10 @@
+# iPaymu Configuration (Sandbox)
+IPAYMU_VA=0000005155258811
+IPAYMU_KEY=SANDBOX4DDE84C3-7D3A-4572-8178-33DF5B494131
+IPAYMU_URL=https://sandbox.ipaymu.com
+
+# Webhook URL (update this for production)
+WEBHOOK_URL=http://localhost:8000/api/payment/notify
+
+# CORS Allowed Origins
+ALLOWED_ORIGINS=http://localhost:3000
