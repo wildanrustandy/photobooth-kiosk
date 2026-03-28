@@ -39,6 +39,11 @@ watch(() => store.paymentStatus, (newStatus) => {
     setTimeout(() => {
       handleNext()
     }, 2500)
+  } else if (newStatus === 'failed') {
+    setTimeout(() => {
+      store.resetSession()
+      router.push('/')
+    }, 3000)
   }
 })
 
@@ -98,6 +103,15 @@ function handleSimulatePayment() {
         </div>
         <h2 class="text-4xl font-extrabold text-on-surface font-headline mb-3 tracking-tight">Pembayaran Berhasil!</h2>
         <p class="text-xl text-on-surface-variant font-body font-medium animate-pulse">Menyiapkan Sesi Foto...</p>
+      </div>
+
+      <!-- Failed Overlay -->
+      <div v-if="store.paymentStatus === 'failed'" class="absolute inset-0 z-50 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center rounded-3xl">
+        <div class="w-32 h-32 bg-red-500 rounded-full flex items-center justify-center shadow-2xl mb-8 scale-110 animate-pulse">
+          <span class="material-symbols-outlined text-white text-7xl font-bold" style="font-variation-settings: 'FILL' 1;">close</span>
+        </div>
+        <h2 class="text-4xl font-extrabold text-on-surface font-headline mb-3 tracking-tight">Waktu Habis / Gagal</h2>
+        <p class="text-xl text-on-surface-variant font-body font-medium animate-pulse">Mengembalikan ke Halaman Utama...</p>
       </div>
 
       <ProgressIndicator :current-step="2" :total-steps="5" class="mb-4 flex-none" />

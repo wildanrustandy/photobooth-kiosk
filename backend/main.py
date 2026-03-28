@@ -1,5 +1,6 @@
 import requests
 import json
+import urllib.parse
 from datetime import datetime
 import hashlib
 import hmac
@@ -36,7 +37,7 @@ def create_payment(req: PaymentRequest):
         "email": "user@kiosk.com",
         "amount": req.amount,
         # "notifyUrl": "http://localhost:8000/api/payment/notify",
-        "notifyUrl": "https://fd85-2404-8000-100c-385-99a8-78ad-1c67-f998.ngrok-free.app/",
+        "notifyUrl": "https://fd85-2404-8000-100c-385-99a8-78ad-1c67-f998.ngrok-free.app/api/payment/notify",
         "comments": "Photobooth Payment",
         "referenceId": "PB" + datetime.today().strftime("%Y%m%d%H%M%S"),
         "paymentMethod": "qris",
@@ -122,15 +123,24 @@ async def payment_notify(request: Request):
 
     data = {}
 
-    # Parse form data (key=value&key2=value2 format)
     if body_str:
-        pairs = body_str.split("&")
-        for pair in pairs:
-            if "=" in pair:
-                key, value = pair.split("=", 1)
-                data[key] = value
+        if body_str.strip().startswith("{"):
+            try:
+                data = json.loads(body_str)
+            except Exception:
+                pass
+        else:
+            parsed = urllib.parse.parse_qs(body_str)
+            data = {k: v[0] for k, v in parsed.items()}
 
     status = data.get("status", "UNKNOWN")
     trx_id = data.get("trx_id", data.get("transaction_id", "UNKNOWN"))
+
+    if status == "berhasil":
+        # TODO: Update database status transaksi menjadi PAID
+        pass
+    elif status == "expired" or status == "-2":
+        # TODO: Update database status transaksi menjadi EXPIRED/FAILED
+        pass
 
     return {"status": "success", "trx_id": trx_id, "received_data": data}
