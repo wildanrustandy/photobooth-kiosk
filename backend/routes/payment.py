@@ -169,14 +169,111 @@ async def check_status(
 
 @router.get("/notify")
 async def test_payment_notify_get(
-    trx_id: str = "TEST_TRX_123", status: str = "berhasil"
+    trx_id: str = "TEST_TRX_123",
+    status: str = "berhasil",
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Endpoint GET khusus untuk testing lokal via browser.
-    Contoh: http://localhost:8000/api/payment/notify?trx_id=12345&status=berhasil
+    Contoh: http://localhost:8000/api/payment/notify?trx_id=201383&status=berhasil
     """
+    from routes.websocket import broadcast_transaction_update
+
+    # Update payment status in database
+    if trx_id and trx_id != "TEST_TRX_123":
+        payment_result = await db.execute(
+            select(Payment).where(Payment.transaction_id == trx_id)
+        )
+        payment = payment_result.scalar_one_or_none()
+
+        if payment:
+            if status == "berhasil" or status == "1":
+                payment.status = "success"
+                payment.paid_at = datetime.utcnow()
+
+                # Update session status
+                session_result = await db.execute(
+                    select(Session).where(Session.id == payment.session_id)
+                )
+                session = session_result.scalar_one_or_none()
+                if session:
+                    session.status = "paid"
+
+                await db.commit()
+
+                # Get booth name for broadcast
+                booth_result = await db.execute(
+                    select(Booth).where(Booth.id == payment.booth_id)
+                )
+                booth = booth_result.scalar_one_or_none()
+                booth_name = booth.name if booth else "Unknown"
+
+                # Broadcast transaction update to admin clients
+                await broadcast_transaction_update(
+                    {
+                        "id": str(payment.id),
+                        "session_id": str(payment.session_id),
+                        "reference_id": payment.reference_id,
+                        "transaction_id": payment.transaction_id,
+                        "booth_id": str(payment.booth_id),
+                        "booth_name": booth_name,
+                        "amount": float(payment.amount),
+                        "status": "success",
+                        "provider": payment.provider,
+                        "created_at": payment.created_at.isoformat()
+                        if payment.created_at
+                        else None,
+                        "paid_at": payment.paid_at.isoformat()
+                        if payment.paid_at
+                        else None,
+                    }
+                )
+
+                return {
+                    "message": "Payment updated successfully",
+                    "trx_id": trx_id,
+                    "status": "success",
+                    "broadcast_sent": True,
+                }
+
+            elif status == "expired" or status == "-2" or status == "2":
+                payment.status = "failed"
+                await db.commit()
+
+                # Get booth name for broadcast
+                booth_result = await db.execute(
+                    select(Booth).where(Booth.id == payment.booth_id)
+                )
+                booth = booth_result.scalar_one_or_none()
+                booth_name = booth.name if booth else "Unknown"
+
+                # Broadcast transaction update to admin clients
+                await broadcast_transaction_update(
+                    {
+                        "id": str(payment.id),
+                        "session_id": str(payment.session_id),
+                        "reference_id": payment.reference_id,
+                        "transaction_id": payment.transaction_id,
+                        "booth_id": str(payment.booth_id),
+                        "booth_name": booth_name,
+                        "amount": float(payment.amount),
+                        "status": "failed",
+                        "provider": payment.provider,
+                        "created_at": payment.created_at.isoformat()
+                        if payment.created_at
+                        else None,
+                    }
+                )
+
+                return {
+                    "message": "Payment updated to failed",
+                    "trx_id": trx_id,
+                    "status": "failed",
+                    "broadcast_sent": True,
+                }
+
     return {
-        "message": "Local test successful. Webhook endpoint is active.",
+        "message": "Local test endpoint. Use: /api/payment/notify?trx_id=<transaction_id>&status=berhasil",
         "simulated_data": {"trx_id": trx_id, "status": status},
     }
 
@@ -184,6 +281,8 @@ async def test_payment_notify_get(
 @router.post("/notify")
 async def payment_notify(request: Request, db: AsyncSession = Depends(get_db)):
     """Webhook for payment notification from iPaymu."""
+    from routes.websocket import broadcast_transaction_update
+
     raw_body = await request.body()
     body_str = raw_body.decode("utf-8")
 
@@ -225,9 +324,63 @@ async def payment_notify(request: Request, db: AsyncSession = Depends(get_db)):
                     session.status = "paid"
 
                 await db.commit()
+
+                # Get booth name for broadcast
+                booth_result = await db.execute(
+                    select(Booth).where(Booth.id == payment.booth_id)
+                )
+                booth = booth_result.scalar_one_or_none()
+                booth_name = booth.name if booth else "Unknown"
+
+                # Broadcast transaction update to admin clients
+                await broadcast_transaction_update(
+                    {
+                        "id": str(payment.id),
+                        "session_id": str(payment.session_id),
+                        "reference_id": payment.reference_id,
+                        "transaction_id": payment.transaction_id,
+                        "booth_id": str(payment.booth_id),
+                        "booth_name": booth_name,
+                        "amount": float(payment.amount),
+                        "status": "success",
+                        "provider": payment.provider,
+                        "created_at": payment.created_at.isoformat()
+                        if payment.created_at
+                        else None,
+                        "paid_at": payment.paid_at.isoformat()
+                        if payment.paid_at
+                        else None,
+                    }
+                )
+
             elif status == "expired" or status == "-2" or status == "2":
                 payment.status = "failed"
                 await db.commit()
+
+                # Get booth name for broadcast
+                booth_result = await db.execute(
+                    select(Booth).where(Booth.id == payment.booth_id)
+                )
+                booth = booth_result.scalar_one_or_none()
+                booth_name = booth.name if booth else "Unknown"
+
+                # Broadcast transaction update to admin clients
+                await broadcast_transaction_update(
+                    {
+                        "id": str(payment.id),
+                        "session_id": str(payment.session_id),
+                        "reference_id": payment.reference_id,
+                        "transaction_id": payment.transaction_id,
+                        "booth_id": str(payment.booth_id),
+                        "booth_name": booth_name,
+                        "amount": float(payment.amount),
+                        "status": "failed",
+                        "provider": payment.provider,
+                        "created_at": payment.created_at.isoformat()
+                        if payment.created_at
+                        else None,
+                    }
+                )
 
     return {"status": "success", "trx_id": trx_id, "received_data": data}
 
@@ -288,6 +441,27 @@ async def create_demo_payment(
     )
     db.add(payment)
     await db.commit()
+
+    # Broadcast transaction update to admin clients
+    from routes.websocket import broadcast_transaction_update
+
+    await broadcast_transaction_update(
+        {
+            "id": str(payment.id),
+            "session_id": str(payment.session_id),
+            "reference_id": payment.reference_id,
+            "transaction_id": payment.transaction_id,
+            "booth_id": str(payment.booth_id),
+            "booth_name": booth.name if booth else "Unknown",
+            "amount": float(payment.amount),
+            "status": "success",
+            "provider": payment.provider,
+            "created_at": payment.created_at.isoformat()
+            if payment.created_at
+            else None,
+            "paid_at": payment.paid_at.isoformat() if payment.paid_at else None,
+        }
+    )
 
     return {
         "QrString": "demo-qr-string",

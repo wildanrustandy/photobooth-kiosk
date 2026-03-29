@@ -12,6 +12,9 @@ router = APIRouter(tags=["WebSocket"])
 # Store active connections per device_id
 active_connections: dict[str, WebSocket] = {}
 
+# Store active admin connections
+admin_connections: list[WebSocket] = []
+
 
 async def get_db_session():
     """Get database session for WebSocket."""
@@ -118,6 +121,59 @@ async def device_websocket(websocket: WebSocket, device_id: str):
             heartbeat_task.cancel()
 
 
+@router.websocket("/ws/admin")
+async def admin_websocket(websocket: WebSocket):
+    """
+    WebSocket endpoint for admin panel real-time updates.
+    Used for transaction status updates, booth changes, etc.
+    """
+    await websocket.accept()
+    admin_connections.append(websocket)
+    print(
+        f"[WebSocket] Admin connected. Total admin connections: {len(admin_connections)}"
+    )
+
+    try:
+        # Send initial connection confirmation
+        await websocket.send_json(
+            {
+                "type": "connected",
+                "role": "admin",
+                "timestamp": datetime.utcnow().isoformat(),
+            }
+        )
+
+        while True:
+            # Keep connection alive, wait for messages
+            data = await websocket.receive_text()
+
+            try:
+                message = json.loads(data)
+
+                # Handle ping/pong for connection keep-alive
+                if message.get("type") == "ping":
+                    await websocket.send_json(
+                        {"type": "pong", "timestamp": datetime.utcnow().isoformat()}
+                    )
+
+            except json.JSONDecodeError:
+                await websocket.send_json(
+                    {"type": "error", "message": "Invalid JSON format"}
+                )
+
+    except WebSocketDisconnect:
+        print("[WebSocket] Admin disconnected")
+    except Exception as e:
+        print(f"[WebSocket] Admin WebSocket error: {e}")
+    finally:
+        # Clean up
+        if websocket in admin_connections:
+            admin_connections.remove(websocket)
+        print(
+            f"[WebSocket] Admin removed. Total admin connections: {len(admin_connections)}"
+        )
+
+
 async def heartbeat_sender(websocket: WebSocket, device_id: str):
     """Send periodic heartbeat to client."""
     while True:
@@ -179,3 +235,39 @@ async def notify_booth_update(booth_id: str, booth_data: dict):
                     )
                 except Exception:
                     pass
+
+
+async def broadcast_transaction_update(transaction_data: dict):
+    """
+    Broadcast transaction status update to all connected admin clients.
+    Call this when a payment status changes (success, failed, etc.)
+    """
+    message = {
+        "type": "transaction_update",
+        "data": transaction_data,
+        "timestamp": datetime.utcnow().isoformat(),
+    }
+
+    print(
+        f"[WebSocket] Broadcasting transaction update to {len(admin_connections)} admin clients"
+    )
+    print(
+        f"[WebSocket] Transaction: {transaction_data.get('id')} - Status: {transaction_data.get('status')}"
+    )
+
+    # Send to all connected admin clients
+    disconnected = []
+    for websocket in admin_connections:
+        try:
+            await websocket.send_json(message)
+            print("[WebSocket] Sent to admin client")
+        except Exception as e:
+            print(f"[WebSocket] Error sending to admin client: {e}")
+            disconnected.append(websocket)
+
+    # Clean up disconnected clients
+    for ws in disconnected:
+        if ws in admin_connections:
+            admin_connections.remove(ws)
+
+    print(f"[WebSocket] Broadcast complete. {len(admin_connections)} clients remaining")

@@ -90,13 +90,28 @@ export const useAdminStore = defineStore('admin', () => {
     booths.value = newBooths
   }
 
-  function setTransactions(newTransactions: Transaction[]) {
-    transactions.value = newTransactions
-  }
+function setTransactions(newTransactions: Transaction[]) {
+  transactions.value = newTransactions
+}
 
-  function setCurrentBooth(booth: Booth | null) {
-    currentBooth.value = booth
+function updateTransaction(updatedTransaction: Transaction) {
+  const index = transactions.value.findIndex(t => t.id === updatedTransaction.id)
+
+  if (index !== -1) {
+    // Update existing transaction
+    transactions.value[index] = {
+      ...transactions.value[index],
+      ...updatedTransaction,
+    }
+  } else {
+    // Add new transaction to the beginning
+    transactions.value.unshift(updatedTransaction)
   }
+}
+
+function setCurrentBooth(booth: Booth | null) {
+  currentBooth.value = booth
+}
 
   function updateBoothInList(updatedBooth: Booth) {
     const index = booths.value.findIndex(b => b.id === updatedBooth.id)
@@ -168,6 +183,7 @@ export const useAdminStore = defineStore('admin', () => {
     setError,
     setBooths,
     setTransactions,
+    updateTransaction,
     setCurrentBooth,
     updateBoothInList,
     removeBoothFromList,

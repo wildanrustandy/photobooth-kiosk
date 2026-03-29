@@ -3,10 +3,12 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAdminStore } from '@/stores/admin'
 import { useAdminApi } from '@/composables/useAdminApi'
+import { useAdminWebSocket } from '@/composables/useAdminWebSocket'
 
 const router = useRouter()
 const store = useAdminStore()
 const { fetchTransactions, isLoading } = useAdminApi()
+const { isConnected, connect, disconnect } = useAdminWebSocket()
 
 // Filters
 const dateRange = ref('7d')
@@ -17,42 +19,14 @@ const boothFilter = ref('all')
 const currentPage = ref(1)
 const itemsPerPage = 10
 
-// Auto-refresh
-const autoRefresh = ref(true)
-const refreshInterval = ref<number | null>(null)
-const REFRESH_INTERVAL_MS = 5000 // 5 seconds
-
 onMounted(() => {
   loadTransactions()
-  startAutoRefresh()
+  connect()
 })
 
 onUnmounted(() => {
-  stopAutoRefresh()
+  disconnect()
 })
-
-function startAutoRefresh() {
-  if (autoRefresh.value && !refreshInterval.value) {
-    refreshInterval.value = window.setInterval(() => {
-      loadTransactions()
-    }, REFRESH_INTERVAL_MS)
-  }
-}
-
-function stopAutoRefresh() {
-  if (refreshInterval.value) {
-    clearInterval(refreshInterval.value)
-    refreshInterval.value = null
-  }
-}
-
-function toggleAutoRefresh() {
-  if (autoRefresh.value) {
-    startAutoRefresh()
-  } else {
-    stopAutoRefresh()
-  }
-}
 
 async function loadTransactions() {
   const params: any = {}
@@ -271,15 +245,10 @@ function logout() {
             </div>
           </div>
           <div class="self-end pb-0.5 flex items-center gap-3">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                v-model="autoRefresh"
-                @change="toggleAutoRefresh"
-                class="peer appearance-none w-4 h-4 rounded border-2 border-outline-variant checked:bg-primary checked:border-primary transition-all cursor-pointer"
-              />
-              <span class="text-xs text-on-surface-variant">Auto-refresh</span>
-            </label>
+            <div class="flex items-center gap-2 px-3 py-2 rounded-lg" :class="isConnected ? 'bg-primary-container/20 text-on-primary-container' : 'bg-error-container/20 text-error'">
+              <span class="material-symbols-outlined text-sm">{{ isConnected ? 'wifi' : 'wifi_off' }}</span>
+              <span class="text-xs font-medium">{{ isConnected ? 'Real-time' : 'Offline' }}</span>
+            </div>
             <button
               @click="loadTransactions"
               :disabled="isLoading"
