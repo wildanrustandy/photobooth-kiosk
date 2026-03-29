@@ -118,6 +118,31 @@ async def create_payment(
         db.add(payment)
         await db.commit()
 
+        # Broadcast transaction creation to admin clients
+        from routes.websocket import broadcast_transaction_update
+
+        booth_result = await db.execute(select(Booth).where(Booth.id == booth_id))
+        booth = booth_result.scalar_one_or_none()
+        booth_name = booth.name if booth else "Unknown"
+
+        await broadcast_transaction_update(
+            {
+                "id": str(payment.id),
+                "session_id": str(session.id),
+                "reference_id": reference_id,
+                "transaction_id": str(payment_data.get("TransactionId")),
+                "booth_id": str(booth_id),
+                "booth_name": booth_name,
+                "amount": float(request.amount),
+                "status": "pending",
+                "provider": payment.provider,
+                "created_at": payment.created_at.isoformat()
+                if payment.created_at
+                else None,
+                "paid_at": None,
+            }
+        )
+
         return {
             "QrString": payment_data.get("QrString"),
             "TransactionId": str(
