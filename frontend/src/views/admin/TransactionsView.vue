@@ -127,13 +127,24 @@ function formatCurrency(amount: number): string {
 }
 
 function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
+  if (!dateString) return '-'
+
+  // Ensure date string is treated as UTC by appending 'Z' if not present
+  const utcString = dateString.endsWith('Z') ? dateString : dateString + 'Z'
+  const date = new Date(utcString)
+
+  // Convert to GMT+7 (WIB) - add 7 hours to UTC
+  const gmt7Offset = 7 * 60 * 60 * 1000
+  const gmt7Date = new Date(date.getTime() + gmt7Offset)
+
+  const day = gmt7Date.getUTCDate().toString().padStart(2, '0')
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
+  const month = monthNames[gmt7Date.getUTCMonth()]
+  const year = gmt7Date.getUTCFullYear()
+  const hours = gmt7Date.getUTCHours().toString().padStart(2, '0')
+  const minutes = gmt7Date.getUTCMinutes().toString().padStart(2, '0')
+
+  return `${day} ${month} ${year}, ${hours}:${minutes} WIB`
 }
 
 function logout() {
